@@ -1,7 +1,13 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+//	"github.com/gin-gonic/gin"
+	"is-deploy-agent/router"
+)
 
 func main() {
-	gin.Default()
+
+	server := router.SetRouter()
+
+	server.Run(":8080")
 }
