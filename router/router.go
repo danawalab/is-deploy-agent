@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"is-deploy-agent/service"
 	"net/http"
 )
 
@@ -16,6 +17,7 @@ func SetRouter() *gin.Engine {
 			context.String(http.StatusOK, "Router exclude Ready %s", worker)
 		})
 		lb.PUT("/restore", func(context *gin.Context) {
+			service.Restore()
 			context.String(http.StatusOK, "Router restore Ready")
 		})
 	}
