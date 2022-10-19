@@ -7,16 +7,27 @@ import (
 	"os"
 )
 
-func readFile(path string) {
-	file, err := os.Open(path)
-	if err != nil {
-		log.Fatal(err)
-	}
+func Restore(node int) {
+	path := getPropertiesPath(0)
+	loadbalancerMap := getLbMap(node)
+	lbLength := len(loadbalancerMap)
 
-	file.Close()
+	if isLengthOne(lbLength) {
+		key := loadbalancerMap[0].Key
+		value := loadbalancerMap[0].Value
+		lb := key + "=" + value
+
+		writeFileString(path, lb)
+	} else {
+		writeFileArray(path, loadbalancerMap, lbLength)
+	}
 }
 
-func writeFile(path string, lb string) {
+func Exclude(node int, pod int) {
+	//path := getPropertiesPath(0)
+}
+
+func writeFileString(path string, lb string) {
 	file, err := os.Create(path)
 	if err != nil {
 		log.Fatal(err)
@@ -26,33 +37,66 @@ func writeFile(path string, lb string) {
 	file.Close()
 }
 
-func readJson() string {
+func writeFileArray(path string, lb []model.WorkerMap, length int) {
+	file, err := os.Create(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < length; i++ {
+		key := lb[i].Key
+		value := lb[i].Value
+
+		lb := key + "=" + value + "\n"
+		file.Write([]byte(lb))
+	}
+	file.Close()
+}
+
+func getLbMap(node int) []model.WorkerMap {
+	jsons := readJson()
+	jsonLength := len(jsons[0].NodeList[node].LbMap)
+	var loadbalancerMap []model.WorkerMap
+
+	if isLengthOne(jsonLength) {
+		key := jsons[0].NodeList[node].LbMap[0].Key
+		value := jsons[0].NodeList[node].LbMap[0].Value
+
+		loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
+		return loadbalancerMap
+	} else {
+		for i := 0; i < jsonLength; i++ {
+			key := jsons[0].NodeList[node].LbMap[i].Key
+			value := jsons[0].NodeList[node].LbMap[i].Value
+
+			loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
+		}
+		return loadbalancerMap
+	}
+}
+
+func isLengthOne(jsonLength int) bool {
+	if jsonLength == 1 {
+		return true
+	}
+	return false
+}
+
+func getPropertiesPath(node int) string {
+	jsons := readJson()
+	return jsons[0].NodeList[node].Path
+}
+
+func readJson() []model.Model {
 	path, err := os.Open("./setting.json")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var model []model.Model
+	var models []model.Model
 
 	decoder := json.NewDecoder(path)
-	decoder.Decode(&model)
+	decoder.Decode(&models)
 
-	key := model[0].NodeList[0].LbMap[0].Key
-	value := model[0].NodeList[0].LbMap[0].Value
-
-	result := key + "=" + value
-
-	return result
-}
-
-func Restore() {
-	path := "../ex.properties"
-	lb := readJson()
-	readFile(path)
-	writeFile(path, lb)
-	readFile(path)
-}
-
-func Exclude() {
-
+	return models
 }

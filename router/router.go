@@ -17,7 +17,7 @@ func SetRouter() *gin.Engine {
 			context.String(http.StatusOK, "Router exclude Ready %s", worker)
 		})
 		lb.PUT("/restore", func(context *gin.Context) {
-			service.Restore()
+			service.Restore(0)
 			context.String(http.StatusOK, "Router restore Ready")
 		})
 	}
