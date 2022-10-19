@@ -27,6 +27,10 @@ func Exclude(node int, pod int) {
 	//path := getPropertiesPath(0)
 }
 
+func getAAAAAAAA() {
+
+}
+
 func writeFileString(path string, lb string) {
 	file, err := os.Create(path)
 	if err != nil {
@@ -54,20 +58,20 @@ func writeFileArray(path string, lb []model.WorkerMap, length int) {
 }
 
 func getLbMap(node int) []model.WorkerMap {
-	jsons := readJson()
-	jsonLength := len(jsons[0].NodeList[node].LbMap)
+	models := readJson()
+	modelLength := len(models[0].NodeList[node].LbMap)
 	var loadbalancerMap []model.WorkerMap
 
-	if isLengthOne(jsonLength) {
-		key := jsons[0].NodeList[node].LbMap[0].Key
-		value := jsons[0].NodeList[node].LbMap[0].Value
+	if isLengthOne(modelLength) {
+		key := models[0].NodeList[node].LbMap[0].Key
+		value := models[0].NodeList[node].LbMap[0].Value
 
 		loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
 		return loadbalancerMap
 	} else {
-		for i := 0; i < jsonLength; i++ {
-			key := jsons[0].NodeList[node].LbMap[i].Key
-			value := jsons[0].NodeList[node].LbMap[i].Value
+		for i := 0; i < modelLength; i++ {
+			key := models[0].NodeList[node].LbMap[i].Key
+			value := models[0].NodeList[node].LbMap[i].Value
 
 			loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
 		}
@@ -75,8 +79,8 @@ func getLbMap(node int) []model.WorkerMap {
 	}
 }
 
-func isLengthOne(jsonLength int) bool {
-	if jsonLength == 1 {
+func isLengthOne(length int) bool {
+	if length == 1 {
 		return true
 	}
 	return false
