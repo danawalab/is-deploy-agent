@@ -3,7 +3,6 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -13,7 +12,7 @@ func TestWriteJson(t *testing.T) {
 	service := make([]Model, 1)
 
 	service[0].Service = "PAS"
-	service[0].PodList= make([]PodList, 2)
+	service[0].PodList = make([]PodList, 2)
 	service[0].PodList[0].Name = "서버1"
 	service[0].PodList[0].Ip = "127.0.0.1"
 	service[0].PodList[0].Port = "8080"
@@ -58,15 +57,17 @@ func TestWriteJson(t *testing.T) {
 
 	doc, _ := json.Marshal(service)
 
-	err := ioutil.WriteFile("./test.json", doc, os.FileMode(0644))
+	jsonFile, err := os.Create("./test.json")
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
+
+	jsonFile.Write(doc)
+	defer jsonFile.Close()
 }
 
 func TestReadJson(t *testing.T) {
-	path, err := ioutil.ReadFile("./test.json")
+	path, err := os.Open("./test.json")
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -74,8 +75,8 @@ func TestReadJson(t *testing.T) {
 
 	var service []Model
 
-	json.Unmarshal(path, &service)
+	decoder := json.NewDecoder(path)
+	decoder.Decode(&service)
 
-	fmt.Println(service[0].PodList[0].LbMap[0].Key)
-	fmt.Println(service[0].PodList[0].LbMap[0].Value)
+	fmt.Println(service[0].PodList[0].Ip)
 }
