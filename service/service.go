@@ -37,8 +37,8 @@ func readJson() string {
 	decoder := json.NewDecoder(path)
 	decoder.Decode(&model)
 
-	key := model[0].PodList[0].LbMap[0].Key
-	value := model[0].PodList[0].LbMap[0].Value
+	key := model[0].NodeList[0].LbMap[0].Key
+	value := model[0].NodeList[0].LbMap[0].Value
 
 	result := key + "=" + value
 

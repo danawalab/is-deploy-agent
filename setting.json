@@ -1,7 +1,7 @@
 [
   {
     "service": "PAS",
-    "podList": [
+    "nodeList": [
       {
         "name": "서버1",
         "ip": "127.0.0.1",
@@ -13,7 +13,7 @@
             "value": "load_balancer"
           }
         ],
-        "tomcatList": [
+        "podList": [
           {
             "name": "WAS1",
             "excludeMap": [
@@ -53,7 +53,7 @@
             "value": "load_balancer"
           }
         ],
-        "tomcatList": [
+        "podList": [
           {
             "name": "WAS3",
             "excludeMap": [
