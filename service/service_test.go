@@ -10,15 +10,7 @@ import (
 )
 
 func TestReadJsonValue(t *testing.T) {
-	path, err := os.Open("../setting.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var model []model.Model
-
-	decoder := json.NewDecoder(path)
-	decoder.Decode(&model)
+	model := getJson()
 
 	arrayLength := model[0].NodeList[0].PodList[0].ExcludeMap
 
@@ -28,21 +20,13 @@ func TestReadJsonValue(t *testing.T) {
 		key := model[0].NodeList[0].PodList[0].ExcludeMap[i].Key
 		value := model[0].NodeList[0].PodList[0].ExcludeMap[i].Value
 
-		fmt.Printf("%s = %s", key, value)
+		fmt.Printf("TestReadJsonValue, %s = %s", key, value)
 		fmt.Println()
 	}
 }
 
 func TestJsonValueSave(t *testing.T) {
-	path, err := os.Open("../setting.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var model []model.Model
-
-	decoder := json.NewDecoder(path)
-	decoder.Decode(&model)
+	model := getJson()
 
 	arrayLength := model[0].NodeList[0].PodList[0].ExcludeMap
 
@@ -56,7 +40,48 @@ func TestJsonValueSave(t *testing.T) {
 		newArray = append(newArray, ExcludeMap{key, value})
 	}
 
-	fmt.Println(newArray, len(newArray))
+	fmt.Println("TestJsonValueSave = ", newArray, len(newArray))
+}
+
+func TestFindByName(t *testing.T) {
+	worker := "WAS1"
+	model := getJson()
+
+	length := len(model[0].NodeList[0].PodList)
+	var newArray []ExcludeMap
+
+	for i := 0; i < length; i++ {
+		pod := model[0].NodeList[0].PodList[i]
+		name := pod.Name
+
+		if worker == name {
+			exLength := len(pod.ExcludeMap)
+
+			for j := 0; j < exLength; j++ {
+				key := pod.ExcludeMap[j].Key
+				value := pod.ExcludeMap[j].Value
+
+				newArray = append(newArray, ExcludeMap{key, value})
+			}
+			break
+		}
+	}
+
+	fmt.Println("TestFindByName = ", newArray, len(newArray))
+}
+
+func getJson() []model.Model {
+	path, err := os.Open("../setting.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var model []model.Model
+
+	decoder := json.NewDecoder(path)
+	decoder.Decode(&model)
+
+	return model
 }
 
 type ExcludeMap struct {

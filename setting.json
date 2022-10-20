@@ -46,7 +46,7 @@
         "name": "서버2",
         "ip": "127.0.0.2",
         "port": "8080",
-        "path": "c/apache24/conf/uriworkermap.properties",
+        "path": "C:/Apache24/conf/uriworkermap.properties",
         "lbMap": [
           {
             "key": "/*",

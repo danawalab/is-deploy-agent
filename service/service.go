@@ -7,57 +7,65 @@ import (
 	"os"
 )
 
-func Restore(node int) {
+func Restore() {
 	path := getPropertiesPath(0)
-	loadbalancerMap := getLbMap(node)
+	loadbalancerMap := getLoadbalancerMap(0)
 	lbLength := len(loadbalancerMap)
 
 	if isLengthOne(lbLength) {
-		key := loadbalancerMap[0].Key
-		value := loadbalancerMap[0].Value
-		lb := key + "=" + value
-
+		lb := getWorkerMapResult(loadbalancerMap)
 		writeFileString(path, lb)
 	} else {
 		writeFileArray(path, loadbalancerMap, lbLength)
 	}
 }
 
-func Exclude(node int, pod int) {
-	//path := getPropertiesPath(0)
-}
+func Exclude(worker string) {
+	path := getPropertiesPath(0)
+	excludeMap := getExcludeMap(0, worker)
+	exLength := len(excludeMap)
 
-func getAAAAAAAA() {
-
-}
-
-func writeFileString(path string, lb string) {
-	file, err := os.Create(path)
-	if err != nil {
-		log.Fatal(err)
+	if isLengthOne(exLength) {
+		ex := getWorkerMapResult(excludeMap)
+		writeFileString(path, ex)
+	} else {
+		writeFileArray(path, excludeMap, exLength)
 	}
-
-	file.Write([]byte(lb))
-	file.Close()
 }
 
-func writeFileArray(path string, lb []model.WorkerMap, length int) {
-	file, err := os.Create(path)
-	if err != nil {
-		log.Fatal(err)
-	}
+func getWorkerMapResult(workerMap []model.WorkerMap) string {
+	key := workerMap[0].Key
+	value := workerMap[0].Value
+	result := key + "=" + value
 
-	for i := 0; i < length; i++ {
-		key := lb[i].Key
-		value := lb[i].Value
-
-		lb := key + "=" + value + "\n"
-		file.Write([]byte(lb))
-	}
-	file.Close()
+	return result
 }
 
-func getLbMap(node int) []model.WorkerMap {
+func getExcludeMap(node int, worker string) []model.WorkerMap {
+	models := readJson()
+	podLength := len(models[0].NodeList[node].PodList)
+	var excludeMap []model.WorkerMap
+
+	for pods := 0; pods < podLength; pods++ {
+		pod := models[0].NodeList[node].PodList[pods]
+		name := pod.Name
+
+		if name == worker {
+			exLength := len(pod.ExcludeMap)
+
+			for excludeMaps := 0; excludeMaps < exLength; excludeMaps++ {
+				key := pod.ExcludeMap[excludeMaps].Key
+				value := pod.ExcludeMap[excludeMaps].Value
+
+				excludeMap = append(excludeMap, model.WorkerMap{Key: key, Value: value})
+			}
+			break
+		}
+	}
+	return excludeMap
+}
+
+func getLoadbalancerMap(node int) []model.WorkerMap {
 	models := readJson()
 	modelLength := len(models[0].NodeList[node].LbMap)
 	var loadbalancerMap []model.WorkerMap
@@ -69,14 +77,40 @@ func getLbMap(node int) []model.WorkerMap {
 		loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
 		return loadbalancerMap
 	} else {
-		for i := 0; i < modelLength; i++ {
-			key := models[0].NodeList[node].LbMap[i].Key
-			value := models[0].NodeList[node].LbMap[i].Value
+		for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
+			key := models[0].NodeList[node].LbMap[loadbalancer].Key
+			value := models[0].NodeList[node].LbMap[loadbalancer].Value
 
 			loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
 		}
 		return loadbalancerMap
 	}
+}
+
+func writeFileString(path string, workerMap string) {
+	file, err := os.Create(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file.Write([]byte(workerMap))
+	defer file.Close()
+}
+
+func writeFileArray(path string, workerMaps []model.WorkerMap, length int) {
+	file, err := os.Create(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for workerMap := 0; workerMap < length; workerMap++ {
+		key := workerMaps[workerMap].Key
+		value := workerMaps[workerMap].Value
+
+		lb := key + "=" + value + "\n"
+		file.Write([]byte(lb))
+	}
+	defer file.Close()
 }
 
 func isLengthOne(length int) bool {
@@ -102,5 +136,6 @@ func readJson() []model.Model {
 	decoder := json.NewDecoder(path)
 	decoder.Decode(&models)
 
+	defer path.Close()
 	return models
 }
