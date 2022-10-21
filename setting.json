@@ -25,7 +25,8 @@
                 "key": "/*",
                 "value": "load_balancer_ex1"
               }
-            ]
+            ],
+            "logPath": "C:/tomcat1/logs/"
           },
           {
             "name": "WAS2",

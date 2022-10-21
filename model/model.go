@@ -17,6 +17,7 @@ type NodeList struct {
 type PodList struct {
 	Name       string      `json:"name"`
 	ExcludeMap []WorkerMap `json:"excludeMap"`
+	LogPath    string      `json:"logPath"`
 }
 
 type WorkerMap struct {
