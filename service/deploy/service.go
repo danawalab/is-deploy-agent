@@ -11,21 +11,21 @@ import (
 )
 
 func Deploy(node int, worker string) {
-	pullWAR(node, worker)
+	fileName := pullWAR(node, worker)
 	removeWAR(node, worker)
-	copyWAR(node, worker)
+	copyWAR(node, worker, fileName)
 }
 
-func copyWAR(node int, worker string) {
-	webappPath, fileName := getWebappPathAndFileName(node, worker)
+func copyWAR(node int, worker string, fileName string) {
+	webappPath, web := getWebappPathAndFileName(node, worker)
 
-	origin, err := os.Open(fileName)
+	origin, err := os.Open("./" + fileName)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer origin.Close()
 
-	copy, err := os.Create(webappPath + fileName)
+	copy, err := os.Create(webappPath + web)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,6 +36,7 @@ func copyWAR(node int, worker string) {
 		log.Fatal(err)
 	}
 
+	//os.Remove("./" + fileName) not work
 	fmt.Println(file)
 }
 
@@ -48,17 +49,16 @@ func removeWAR(node int, worker string) {
 	}
 }
 
-func pullWAR(node int, worker string) {
+func pullWAR(node int, worker string) string {
 	jenkinsURL := getJenkinsURL()
-	_, fileName := getWebappPathAndFileName(node, worker)
 
 	response, err := grab.Get(".", jenkinsURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	response.Filename = fileName
 	fmt.Println("Download Complete", response)
+	return response.Filename
 }
 
 func getWebappPathAndFileName(node int, worker string) (string, string) {
