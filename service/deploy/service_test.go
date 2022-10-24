@@ -4,11 +4,21 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/cavaliergopher/grab/v3"
 	"is-deploy-agent/model"
 	"log"
 	"os"
 	"testing"
 )
+
+func TestDownloadWAR(t *testing.T) {
+	resp, err := grab.Get(".", "")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("Download Test", resp.Filename)
+}
 
 func TestGetLog(t *testing.T) {
 	models := getJson()
