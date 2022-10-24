@@ -28,7 +28,7 @@ func SetRouter() *gin.Engine {
 		dp.PUT("/deploy", func(context *gin.Context) {
 			service := context.Query("service")
 			worker := context.Query("worker")
-			deploy.Deploy(worker)
+			deploy.Deploy(0, worker)
 			context.String(http.StatusOK, "Router deploy Ready %s %s", service, worker)
 		})
 	}
