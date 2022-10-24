@@ -1,4 +1,4 @@
-package service
+package loadbalance
 
 import (
 	"encoding/json"
@@ -71,7 +71,7 @@ func TestFindByName(t *testing.T) {
 }
 
 func getJson() []model.Model {
-	path, err := os.Open("../setting.json")
+	path, err := os.Open("../../setting.json")
 	if err != nil {
 		log.Fatal(err)
 	}
