@@ -13,6 +13,14 @@
             "value": "load_balancer"
           }
         ],
+        "jenkinsURL": {
+          "basicURL": "",
+          "middleURL": "/lastSuccessfulBuild/artifact/",
+          "jobName": "",
+          "groupId": "",
+          "artifactId": "",
+          "version": ""
+        },
         "podList": [
           {
             "name": "WAS1",
@@ -26,7 +34,9 @@
                 "value": "load_balancer_ex1"
               }
             ],
-            "logPath": "C:/tomcat1/logs/"
+            "logPath": "C:/tomcat1/logs/",
+            "webappPath": "C:/tomcat1/webapps/",
+            "fileName": "web.war"
           },
           {
             "name": "WAS2",
@@ -39,7 +49,10 @@
                 "key": "/*",
                 "value": "load_balancer_ex2"
               }
-            ]
+            ],
+            "logPath": "C:/tomcat2/logs/",
+            "webappPath": "C:/tomcat2/webapps/",
+            "fileName": "web.war"
           }
         ]
       },
@@ -54,6 +67,14 @@
             "value": "load_balancer"
           }
         ],
+        "jenkinsURL": {
+          "basicURL": "",
+          "middleURL": "/lastSuccessfulBuild/artifact/",
+          "jobName": "",
+          "groupId": "",
+          "artifactId": "",
+          "version": ""
+        },
         "podList": [
           {
             "name": "WAS3",
@@ -66,7 +87,10 @@
                 "key": "/*",
                 "value": "load_balancer_ex3"
               }
-            ]
+            ],
+            "logPath": "C:/tomcat3/logs/",
+            "webappPath": "C:/tomcat3/webapps/",
+            "fileName": "web.war"
           },
           {
             "name": "WAS4",
@@ -79,7 +103,10 @@
                 "key": "/*",
                 "value": "load_balancer_ex4"
               }
-            ]
+            ],
+            "logPath": "C:/tomcat4/logs/",
+            "webappPath": "C:/tomcat4/webapps/",
+            "fileName": "web.war"
           }
         ]
       }

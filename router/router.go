@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"is-deploy-agent/service/deploy"
 	"is-deploy-agent/service/loadbalance"
 	"net/http"
 )
@@ -27,6 +28,7 @@ func SetRouter() *gin.Engine {
 		dp.PUT("/deploy", func(context *gin.Context) {
 			service := context.Query("service")
 			worker := context.Query("worker")
+			deploy.Deploy(worker)
 			context.String(http.StatusOK, "Router deploy Ready %s %s", service, worker)
 		})
 	}
