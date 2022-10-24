@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"is-deploy-agent/service/deploy"
 	"is-deploy-agent/service/loadbalance"
+	"is-deploy-agent/service/sync"
 	"net/http"
 )
 
@@ -31,6 +32,11 @@ func SetRouter() *gin.Engine {
 			deploy.Deploy(0, worker)
 			context.String(http.StatusOK, "Router deploy Ready %s %s", service, worker)
 		})
+	}
+
+	fetch := router.Group("/fetch")
+	{
+		fetch.PUT("", sync.FetchJson)
 	}
 
 	return router
