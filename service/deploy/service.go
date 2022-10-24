@@ -10,22 +10,22 @@ import (
 	"os"
 )
 
-func Deploy(worker string) {
-	pullWAR()
-	removeWAR()
-	copyWAR()
+func Deploy(node int, worker string) {
+	fileName := pullWAR(node, worker)
+	removeWAR(node, worker)
+	copyWAR(node, worker, fileName)
 }
 
-func copyWAR() {
-	webappPath, fileName := getWebappPathAndFileName()
+func copyWAR(node int, worker string, fileName string) {
+	webappPath, web := getWebappPathAndFileName(node, worker)
 
-	origin, err := os.Open(fileName)
+	origin, err := os.Open("./" + fileName)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer origin.Close()
 
-	copy, err := os.Create(webappPath + fileName)
+	copy, err := os.Create(webappPath + web)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,11 +36,12 @@ func copyWAR() {
 		log.Fatal(err)
 	}
 
+	//os.Remove("./" + fileName) not work
 	fmt.Println(file)
 }
 
-func removeWAR() {
-	webappPath, fileName := getWebappPathAndFileName()
+func removeWAR(node int, worker string) {
+	webappPath, fileName := getWebappPathAndFileName(node, worker)
 
 	err := os.Remove(webappPath + fileName)
 	if err != nil {
@@ -48,26 +49,34 @@ func removeWAR() {
 	}
 }
 
-func getWebappPathAndFileName() (string, string) {
-	models := readJson()
-
-	webappPath := models[0].NodeList[0].PodList[0].WebappPath
-	fileName := models[0].NodeList[0].PodList[0].FileName
-
-	return webappPath, fileName
-}
-
-func pullWAR() {
+func pullWAR(node int, worker string) string {
 	jenkinsURL := getJenkinsURL()
-	_, fileName := getWebappPathAndFileName()
 
 	response, err := grab.Get(".", jenkinsURL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	response.Filename = fileName
 	fmt.Println("Download Complete", response)
+	return response.Filename
+}
+
+func getWebappPathAndFileName(node int, worker string) (string, string) {
+	models := readJson()
+	podLength := len(models[0].NodeList[node].PodList)
+
+	var webappPath string
+	var fileName string
+	for pods := 0; pods < podLength; pods++ {
+		pod := models[0].NodeList[node].PodList[pods]
+		name := pod.Name
+
+		if name == worker {
+			webappPath = pod.WebappPath
+			fileName = pod.FileName
+		}
+	}
+	return webappPath, fileName
 }
 
 func getJenkinsURL() string {

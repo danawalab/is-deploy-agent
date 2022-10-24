@@ -7,9 +7,9 @@ import (
 	"os"
 )
 
-func Restore() {
-	path := getPropertiesPath(0)
-	loadbalancerMap := getLoadbalancerMap(0)
+func Restore(node int) {
+	path := getPropertiesPath(node)
+	loadbalancerMap := getLoadbalancerMap(node)
 	lbLength := len(loadbalancerMap)
 
 	if isLengthOne(lbLength) {
@@ -20,9 +20,9 @@ func Restore() {
 	}
 }
 
-func Exclude(worker string) {
-	path := getPropertiesPath(0)
-	excludeMap := getExcludeMap(0, worker)
+func Exclude(node int, worker string) {
+	path := getPropertiesPath(node)
+	excludeMap := getExcludeMap(node, worker)
 	exLength := len(excludeMap)
 
 	if isLengthOne(exLength) {
