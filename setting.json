@@ -6,21 +6,13 @@
         "name": "서버1",
         "ip": "127.0.0.1",
         "port": "8080",
-        "path": "C:/Apache24/conf/uriworkermap.properties",
+        "path": "/etc/apache2/uriworkermap.properties",
         "lbMap": [
           {
             "key": "/*",
             "value": "load_balancer"
           }
         ],
-        "jenkinsURL": {
-          "basicURL": "",
-          "middleURL": "/lastSuccessfulBuild/artifact/",
-          "jobName": "",
-          "groupId": "",
-          "artifactId": "",
-          "version": ""
-        },
         "podList": [
           {
             "name": "WAS1",
@@ -35,8 +27,7 @@
               }
             ],
             "logPath": "C:/tomcat1/logs/",
-            "webappPath": "C:/tomcat1/webapps/",
-            "fileName": "web.war"
+            "shPath": "./sample/tomcat1.sh"
           },
           {
             "name": "WAS2",
@@ -51,8 +42,7 @@
               }
             ],
             "logPath": "C:/tomcat2/logs/",
-            "webappPath": "C:/tomcat2/webapps/",
-            "fileName": "web.war"
+            "shPath": "./sample/tomcat2.sh"
           }
         ]
       },
@@ -67,14 +57,6 @@
             "value": "load_balancer"
           }
         ],
-        "jenkinsURL": {
-          "basicURL": "",
-          "middleURL": "/lastSuccessfulBuild/artifact/",
-          "jobName": "",
-          "groupId": "",
-          "artifactId": "",
-          "version": ""
-        },
         "podList": [
           {
             "name": "WAS3",
@@ -89,8 +71,7 @@
               }
             ],
             "logPath": "C:/tomcat3/logs/",
-            "webappPath": "C:/tomcat3/webapps/",
-            "fileName": "web.war"
+            "shPath": ""
           },
           {
             "name": "WAS4",
@@ -105,8 +86,7 @@
               }
             ],
             "logPath": "C:/tomcat4/logs/",
-            "webappPath": "C:/tomcat4/webapps/",
-            "fileName": "web.war"
+            "shPath": ""
           }
         ]
       }
