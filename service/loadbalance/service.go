@@ -50,7 +50,7 @@ func getExcludeMap(node int, worker string) []model.WorkerMap {
 		pod := models[0].NodeList[node].PodList[pods]
 		name := pod.Name
 
-		if name == worker {
+		if isNameEqual(name, worker) {
 			exLength := len(pod.ExcludeMap)
 
 			for excludeMaps := 0; excludeMaps < exLength; excludeMaps++ {
@@ -63,6 +63,13 @@ func getExcludeMap(node int, worker string) []model.WorkerMap {
 		}
 	}
 	return excludeMap
+}
+
+func isNameEqual(name string, worker string) bool {
+	if name == worker {
+		return true
+	}
+	return false
 }
 
 func getLoadbalancerMap(node int) []model.WorkerMap {
