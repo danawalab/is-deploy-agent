@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/cavaliergopher/grab/v3"
-	"io"
 	"is-deploy-agent/model"
 	"log"
 	"os"
@@ -13,7 +11,7 @@ import (
 	"testing"
 )
 
-func TestExecShell(t *testing.T) {
+func ExcludeTestExecShell(t *testing.T) {
 	cmd := exec.Command("./test.sh")
 
 	output, _ := cmd.Output()
@@ -21,6 +19,8 @@ func TestExecShell(t *testing.T) {
 	fmt.Println(string(output))
 }
 
+// danawa Repository에서는 해당 기능 삭제
+/*c
 func ExcludeTestDownloadWAR(t *testing.T) {
 	models := getJson()
 
@@ -70,7 +70,7 @@ func ExcludeTestDeploy(t *testing.T) {
 		log.Fatal(err)
 	}
 }
-
+*/
 func ExcludeTestGetLog(t *testing.T) {
 	models := getJson()
 	logPath := models[0].NodeList[0].PodList[0].LogPath
