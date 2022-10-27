@@ -11,7 +11,7 @@ import (
 func SetRouter() *gin.Engine {
 	router := gin.Default()
 
-	lb := router.Group("/loadbalance")
+	lb := router.Group("/load-balance")
 	{
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
@@ -34,9 +34,21 @@ func SetRouter() *gin.Engine {
 		})
 	}
 
-	fetch := router.Group("/fetch")
+	sc := router.Group("/sync")
 	{
-		fetch.PUT("", sync.FetchJson)
+		sc.PUT("", sync.FetchJson)
+	}
+
+	lg := router.Group("/logs")
+	{
+		lg.GET("")
+	}
+
+	hp := router.Group("/health-check")
+	{
+		hp.GET("", func(context *gin.Context) {
+			context.String(http.StatusOK, "Health Good")
+		})
 	}
 
 	return router
