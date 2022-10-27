@@ -42,8 +42,8 @@ func SetRouter() *gin.Engine {
 	lg := router.Group("/logs")
 	{
 		lg.GET("/all", func(context *gin.Context) {
-			//worker := context.Query("worker")
-			logs := log.GetLogAll()
+			worker := context.Query("worker")
+			logs := log.GetLogAll(worker)
 			for logs.Scan() {
 				context.String(http.StatusOK, "%s\n", logs.Text())
 			}
