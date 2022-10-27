@@ -1,8 +1,10 @@
 package model
 
 type Model struct {
-	Service  string     `json:"service"`
-	NodeList []NodeList `json:"nodeList"`
+	Service     string     `json:"service"`
+	ConsoleInfo string     `json:"consoleInfo"`
+	AgentInfo   string     `json:"agentInfo"`
+	NodeList    []NodeList `json:"nodeList"`
 }
 
 type NodeList struct {
@@ -24,4 +26,14 @@ type PodList struct {
 type WorkerMap struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
+}
+
+type AgentInfo struct {
+	Name string `json:"name"`
+	Ip   string `json:"ip"`
+	Port string `json:"port"`
+}
+
+type ConsoleInfo struct {
+	Address string `json:"address"`
 }

@@ -1,6 +1,14 @@
 [
   {
-    "service": "PAS",
+    "service": "Example",
+    "consoleInfo": {
+      "address": "localhost:3000",
+    },
+    "agentInfo": {
+      "name": "Example Agent",
+      "ip": "127.0.0.1",
+      "port": "5000"
+    },
     "nodeList": [
       {
         "name": "서버1",
