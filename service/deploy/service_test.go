@@ -2,9 +2,8 @@ package deploy
 
 import (
 	"bufio"
-	"encoding/json"
 	"fmt"
-	"is-deploy-agent/model"
+	"is-deploy-agent/service/test"
 	"log"
 	"os"
 	"os/exec"
@@ -72,7 +71,7 @@ func ExcludeTestDeploy(t *testing.T) {
 }
 */
 func ExcludeTestGetLog(t *testing.T) {
-	models := getJson()
+	models := test.GetJsonToTest()
 	logPath := models[0].NodeList[0].PodList[0].LogPath
 	logName := "catalina.2022-10-21.log"
 
@@ -86,18 +85,4 @@ func ExcludeTestGetLog(t *testing.T) {
 	for scanner.Scan() {
 		fmt.Printf("%s\n", scanner.Text())
 	}
-}
-
-func getJson() []model.Model {
-	path, err := os.Open("../../setting.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var model []model.Model
-
-	decoder := json.NewDecoder(path)
-	decoder.Decode(&model)
-
-	return model
 }
