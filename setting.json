@@ -2,7 +2,7 @@
   {
     "service": "Example",
     "consoleInfo": {
-      "address": "localhost:3000",
+      "address": "localhost:3000"
     },
     "agentInfo": {
       "name": "Example Agent",
@@ -34,7 +34,7 @@
                 "value": "load_balancer_ex1"
               }
             ],
-            "logPath": "C:/tomcat1/logs/",
+            "logPath": "C:/tomcat1/logs/catalina.out",
             "shPath": "./sample/tomcat1.sh"
           },
           {

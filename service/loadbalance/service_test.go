@@ -2,12 +2,12 @@ package loadbalance
 
 import (
 	"fmt"
-	"is-deploy-agent/service/test"
+	"is-deploy-agent/utils"
 	"testing"
 )
 
 func TestReadJsonValue(t *testing.T) {
-	models := test.GetJsonToTest()
+	models := utils.GetJsonToTest()
 
 	arrayLength := models[0].NodeList[0].PodList[0].ExcludeMap
 
@@ -23,7 +23,7 @@ func TestReadJsonValue(t *testing.T) {
 }
 
 func TestJsonValueSave(t *testing.T) {
-	models := test.GetJsonToTest()
+	models := utils.GetJsonToTest()
 
 	arrayLength := models[0].NodeList[0].PodList[0].ExcludeMap
 
@@ -42,7 +42,7 @@ func TestJsonValueSave(t *testing.T) {
 
 func TestFindByName(t *testing.T) {
 	worker := "WAS1"
-	models := test.GetJsonToTest()
+	models := utils.GetJsonToTest()
 
 	length := len(models[0].NodeList[0].PodList)
 	var newArray []ExcludeMap

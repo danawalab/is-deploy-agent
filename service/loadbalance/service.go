@@ -1,8 +1,8 @@
 package loadbalance
 
 import (
-	"encoding/json"
 	"is-deploy-agent/model"
+	"is-deploy-agent/utils"
 	"log"
 	"os"
 )
@@ -42,7 +42,7 @@ func getWorkerMapResult(workerMap []model.WorkerMap) string {
 }
 
 func getExcludeMap(node int, worker string) []model.WorkerMap {
-	models := readJson()
+	models := utils.GetJson()
 	podLength := len(models[0].NodeList[node].PodList)
 	var excludeMap []model.WorkerMap
 
@@ -73,7 +73,7 @@ func isNameEqual(name string, worker string) bool {
 }
 
 func getLoadbalancerMap(node int) []model.WorkerMap {
-	models := readJson()
+	models := utils.GetJson()
 	modelLength := len(models[0].NodeList[node].LbMap)
 	var loadbalancerMap []model.WorkerMap
 
@@ -128,21 +128,6 @@ func isLengthOne(length int) bool {
 }
 
 func getPropertiesPath(node int) string {
-	jsons := readJson()
+	jsons := utils.GetJson()
 	return jsons[0].NodeList[node].Path
-}
-
-func readJson() []model.Model {
-	path, err := os.Open("./setting.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var models []model.Model
-
-	decoder := json.NewDecoder(path)
-	decoder.Decode(&models)
-
-	defer path.Close()
-	return models
 }
