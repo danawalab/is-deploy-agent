@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"is-deploy-agent/service/deploy"
 	"is-deploy-agent/service/loadbalance"
+	"is-deploy-agent/service/log"
 	"is-deploy-agent/service/sync"
 	"net/http"
 )
@@ -40,7 +41,13 @@ func SetRouter() *gin.Engine {
 
 	lg := router.Group("/logs")
 	{
-		lg.GET("")
+		lg.GET("/all", func(context *gin.Context) {
+			//worker := context.Query("worker")
+			logs := log.GetLogAll()
+			for logs.Scan() {
+				context.String(http.StatusOK, "%s\n", logs.Text())
+			}
+		})
 	}
 
 	hp := router.Group("/health-check")

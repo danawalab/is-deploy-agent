@@ -9,5 +9,5 @@ func main() {
 
 	server := router.SetRouter()
 
-	server.Run(":5000")
+	server.Run()
 }
