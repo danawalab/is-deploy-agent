@@ -3,11 +3,14 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"is-deploy-agent/service/deploy"
+	"is-deploy-agent/service/fetch"
 	"is-deploy-agent/service/loadbalance"
 	"is-deploy-agent/service/log"
-	"is-deploy-agent/service/sync"
 	"net/http"
+	"sync"
 )
+
+var registry_mutex = sync.Mutex{}
 
 func SetRouter() *gin.Engine {
 	router := gin.Default()
@@ -36,7 +39,7 @@ func SetRouter() *gin.Engine {
 
 	sc := router.Group("/sync")
 	{
-		sc.PUT("", sync.FetchJson)
+		sc.PUT("", fetch.FetchJson)
 	}
 
 	lg := router.Group("/logs")
@@ -60,7 +63,11 @@ func SetRouter() *gin.Engine {
 			worker := context.Query("worker")
 			logs := log.GetLogTailFlagF(worker)
 			for line := range logs.Lines {
-				context.String(http.StatusOK, line.Text)
+				go func() {
+					registry_mutex.Lock()
+					context.String(http.StatusOK, line.Text+"\n")
+					registry_mutex.Unlock()
+				}()
 			}
 		})
 	}

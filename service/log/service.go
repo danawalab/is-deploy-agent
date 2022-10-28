@@ -73,7 +73,7 @@ func GetLogTailFlagF(worker string) *tail.Tail {
 		}
 	}
 
-	t, _ := tail.TailFile(logPath, tail.Config{Follow: true})
+	t, _ := tail.TailFile(logPath, tail.Config{Follow: true, ReOpen: true, MustExist: true, Poll: true, Location: &tail.SeekInfo{0, 2}})
 
 	return t
 }
