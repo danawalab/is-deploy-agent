@@ -56,6 +56,13 @@ func SetRouter() *gin.Engine {
 			context.String(http.StatusOK, logs)
 		})
 
+		lg.GET("/tail/f", func(context *gin.Context) {
+			worker := context.Query("worker")
+			logs := log.GetLogTailFlagF(worker)
+			for line := range logs.Lines {
+				context.String(http.StatusOK, line.Text)
+			}
+		})
 	}
 
 	hp := router.Group("/health-check")

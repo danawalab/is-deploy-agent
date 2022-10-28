@@ -2,6 +2,7 @@ package log
 
 import (
 	"bufio"
+	"github.com/hpcloud/tail"
 	"is-deploy-agent/utils"
 	"log"
 	"os"
@@ -54,6 +55,27 @@ func GetLogTailFlagN(worker string, line string) string {
 		log.Println(err)
 	}
 	return string(output)
+}
+
+func GetLogTailFlagF(worker string) *tail.Tail {
+	models := utils.GetJson()
+	logLength := len(models[0].NodeList[0].PodList)
+
+	var logPath string
+	for pods := 0; pods < logLength; pods++ {
+		pod := models[0].NodeList[0].PodList[pods]
+		name := pod.Name
+
+		if isNameEqual(name, worker) {
+			logPath = pod.LogPath
+
+			break
+		}
+	}
+
+	t, _ := tail.TailFile(logPath, tail.Config{Follow: true})
+
+	return t
 }
 
 func isNameEqual(name string, worker string) bool {

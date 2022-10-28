@@ -39,7 +39,7 @@ func ExcludeTestTailLog(t *testing.T) {
 
 }
 
-func TestTailTypeA(t *testing.T) {
+func ExcludeTailTypeA(t *testing.T) {
 	cmd := exec.Command("tail", "-n 10", "../../sample/catalina.out")
 
 	output, _ := cmd.Output()

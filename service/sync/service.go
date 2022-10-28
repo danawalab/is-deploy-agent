@@ -4,14 +4,22 @@ import (
 	"fmt"
 	"github.com/cavaliergopher/grab/v3"
 	"github.com/gin-gonic/gin"
+	"is-deploy-agent/utils"
 	"log"
+	"os/exec"
 )
 
 func FetchJson(*gin.Context) {
-	response, err := grab.Get(".", "")
+	models := utils.GetJson()
+	consoleAddress := models[0].ConsoleInfo
+
+	_, err := grab.Get(".", consoleAddress)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("setting.json Update Complete", response)
+	cmd := exec.Command("./sync.sh")
+	output, err := cmd.Output()
+
+	fmt.Println("setting.json Update", string(output))
 }
