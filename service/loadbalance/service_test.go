@@ -1,24 +1,21 @@
 package loadbalance
 
 import (
-	"encoding/json"
 	"fmt"
-	"is-deploy-agent/model"
-	"log"
-	"os"
+	"is-deploy-agent/utils"
 	"testing"
 )
 
 func TestReadJsonValue(t *testing.T) {
-	model := getJson()
+	models := utils.GetJsonToTest()
 
-	arrayLength := model[0].NodeList[0].PodList[0].ExcludeMap
+	arrayLength := models[0].NodeList[0].PodList[0].ExcludeMap
 
 	fmt.Println(len(arrayLength))
 
 	for i := 0; i < len(arrayLength); i++ {
-		key := model[0].NodeList[0].PodList[0].ExcludeMap[i].Key
-		value := model[0].NodeList[0].PodList[0].ExcludeMap[i].Value
+		key := models[0].NodeList[0].PodList[0].ExcludeMap[i].Key
+		value := models[0].NodeList[0].PodList[0].ExcludeMap[i].Value
 
 		fmt.Printf("TestReadJsonValue, %s = %s", key, value)
 		fmt.Println()
@@ -26,16 +23,16 @@ func TestReadJsonValue(t *testing.T) {
 }
 
 func TestJsonValueSave(t *testing.T) {
-	model := getJson()
+	models := utils.GetJsonToTest()
 
-	arrayLength := model[0].NodeList[0].PodList[0].ExcludeMap
+	arrayLength := models[0].NodeList[0].PodList[0].ExcludeMap
 
 	fmt.Println(len(arrayLength))
 	var newArray []ExcludeMap
 
 	for i := 0; i < len(arrayLength); i++ {
-		key := model[0].NodeList[0].PodList[0].ExcludeMap[i].Key
-		value := model[0].NodeList[0].PodList[0].ExcludeMap[i].Value
+		key := models[0].NodeList[0].PodList[0].ExcludeMap[i].Key
+		value := models[0].NodeList[0].PodList[0].ExcludeMap[i].Value
 
 		newArray = append(newArray, ExcludeMap{key, value})
 	}
@@ -45,13 +42,13 @@ func TestJsonValueSave(t *testing.T) {
 
 func TestFindByName(t *testing.T) {
 	worker := "WAS1"
-	model := getJson()
+	models := utils.GetJsonToTest()
 
-	length := len(model[0].NodeList[0].PodList)
+	length := len(models[0].NodeList[0].PodList)
 	var newArray []ExcludeMap
 
 	for i := 0; i < length; i++ {
-		pod := model[0].NodeList[0].PodList[i]
+		pod := models[0].NodeList[0].PodList[i]
 		name := pod.Name
 
 		if worker == name {
@@ -68,20 +65,6 @@ func TestFindByName(t *testing.T) {
 	}
 
 	fmt.Println("TestFindByName = ", newArray, len(newArray))
-}
-
-func getJson() []model.Model {
-	path, err := os.Open("../../setting.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var model []model.Model
-
-	decoder := json.NewDecoder(path)
-	decoder.Decode(&model)
-
-	return model
 }
 
 type ExcludeMap struct {

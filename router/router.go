@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"is-deploy-agent/service/deploy"
 	"is-deploy-agent/service/loadbalance"
+	"is-deploy-agent/service/log"
 	"is-deploy-agent/service/sync"
 	"net/http"
 )
@@ -11,7 +12,7 @@ import (
 func SetRouter() *gin.Engine {
 	router := gin.Default()
 
-	lb := router.Group("/loadbalance")
+	lb := router.Group("/load-balance")
 	{
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
@@ -27,16 +28,48 @@ func SetRouter() *gin.Engine {
 	dp := router.Group("/webapp")
 	{
 		dp.PUT("/deploy", func(context *gin.Context) {
-			service := context.Query("service")
 			worker := context.Query("worker")
 			deploy.Deploy(0, worker)
-			context.String(http.StatusOK, "Router deploy Ready %s %s", service, worker)
+			context.String(http.StatusOK, "Router deploy Ready %s", worker)
 		})
 	}
 
-	fetch := router.Group("/fetch")
+	sc := router.Group("/sync")
 	{
-		fetch.PUT("", sync.FetchJson)
+		sc.PUT("", sync.FetchJson)
+	}
+
+	lg := router.Group("/logs")
+	{
+		lg.GET("/all", func(context *gin.Context) {
+			worker := context.Query("worker")
+			logs := log.GetLogAll(worker)
+			for logs.Scan() {
+				context.String(http.StatusOK, "%s\n", logs.Text())
+			}
+		})
+
+		lg.GET("/tail/n", func(context *gin.Context) {
+			worker := context.Query("worker")
+			line := context.Query("line")
+			logs := log.GetLogTailFlagN(worker, line)
+			context.String(http.StatusOK, logs)
+		})
+
+		lg.GET("/tail/f", func(context *gin.Context) {
+			worker := context.Query("worker")
+			logs := log.GetLogTailFlagF(worker)
+			for line := range logs.Lines {
+				context.String(http.StatusOK, line.Text)
+			}
+		})
+	}
+
+	hp := router.Group("/health-check")
+	{
+		hp.GET("", func(context *gin.Context) {
+			context.String(http.StatusOK, "Health Good")
+		})
 	}
 
 	return router
