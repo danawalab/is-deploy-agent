@@ -1,11 +1,8 @@
 package deploy
 
 import (
-	"encoding/json"
 	"fmt"
-	"is-deploy-agent/model"
-	"log"
-	"os"
+	"is-deploy-agent/utils"
 	"os/exec"
 )
 
@@ -22,7 +19,7 @@ func executeShell(node int, worker string) {
 }
 
 func getShellPath(node int, worker string) string {
-	models := readJson()
+	models := utils.GetJson()
 	podLength := len(models[0].NodeList[node].PodList)
 
 	var shellPath string
@@ -45,19 +42,4 @@ func isNameEqual(name string, worker string) bool {
 		return true
 	}
 	return false
-}
-
-func readJson() []model.Model {
-	path, err := os.Open("./setting.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var models []model.Model
-
-	decoder := json.NewDecoder(path)
-	decoder.Decode(&models)
-
-	defer path.Close()
-	return models
 }
