@@ -51,7 +51,8 @@ func SetRouter() *gin.Engine {
 
 		lg.GET("/tail/n", func(context *gin.Context) {
 			worker := context.Query("worker")
-			logs := log.GetLogTailFlagN(worker)
+			line := context.Query("line")
+			logs := log.GetLogTailFlagN(worker, line)
 			context.String(http.StatusOK, logs)
 		})
 

@@ -33,7 +33,7 @@ func GetLogAll(worker string) *bufio.Scanner {
 	return scanner
 }
 
-func GetLogTailFlagN(worker string) string {
+func GetLogTailFlagN(worker string, line string) string {
 	models := utils.GetJson()
 	logLength := len(models[0].NodeList[0].PodList)
 
@@ -48,7 +48,7 @@ func GetLogTailFlagN(worker string) string {
 			break
 		}
 	}
-	cmd := exec.Command("tail", "-n 10", logPath)
+	cmd := exec.Command("tail", "-n", line, logPath)
 	output, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
