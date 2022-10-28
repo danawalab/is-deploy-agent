@@ -34,7 +34,7 @@
                 "value": "load_balancer_ex1"
               }
             ],
-            "logPath": "C:/tomcat1/logs/catalina.out",
+            "logPath": "./sample/catalina.out",
             "shPath": "./sample/tomcat1.sh"
           },
           {

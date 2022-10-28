@@ -3,9 +3,11 @@ package log
 import (
 	"bufio"
 	"fmt"
+	"github.com/hpcloud/tail"
 	"is-deploy-agent/utils"
 	"log"
 	"os"
+	"os/exec"
 	"testing"
 )
 
@@ -26,20 +28,21 @@ func ExcludeTestLogFileRead(t *testing.T) {
 	}
 }
 
-func TestTailLog(t *testing.T) {
-	models := utils.GetJsonToTest()
+func ExcludeTestTailLog(t *testing.T) {
+	logPath := "../../sample/catalina.out"
 
-	logPath := models[0].NodeList[0].PodList[0].LogPath
+	ta, _ := tail.TailFile(logPath, tail.Config{})
 
-	logs, err := os.Open(logPath)
-	if err != nil {
-		log.Fatal(err)
+	for line := range ta.Lines {
+		fmt.Println(line.Text)
 	}
 
-	logs.Seek(0, 2)
-	scanner := bufio.NewScanner(logs)
+}
 
-	for scanner.Scan() {
-		fmt.Printf("%s\n", scanner.Text())
-	}
+func TestTailTypeA(t *testing.T) {
+	cmd := exec.Command("tail", "-n 10", "../../sample/catalina.out")
+
+	output, _ := cmd.Output()
+
+	fmt.Println(string(output))
 }
