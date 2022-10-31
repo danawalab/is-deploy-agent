@@ -8,7 +8,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"sync"
 	"testing"
 )
 
@@ -29,26 +28,20 @@ func ExcludeTestLogFileRead(t *testing.T) {
 	}
 }
 
-func ExcludeTestTailLog(t *testing.T) {
-	mx := sync.RWMutex{}
-	var ch = make(chan string)
+func TestTailLog(t *testing.T) {
+	//mx := sync.RWMutex{}
+	//var ch = make(chan string)
 
 	ta, err := tail.TailFile("../../sample/catalina.out", tail.Config{Follow: true, ReOpen: true, MustExist: true, Poll: true, Location: &tail.SeekInfo{Whence: 2}})
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	var lgs string
+	//var lgs string
 	for line := range ta.Lines {
-		go func() {
-			mx.Lock()
-			lg := line.Text
-			ch <- lg
-			mx.Unlock()
-		}()
-		lgs = <-ch
+		lg := line.Text
+		fmt.Println(lg)
 	}
-	fmt.Println(lgs)
 }
 
 func ExcludeTailTypeA(t *testing.T) {

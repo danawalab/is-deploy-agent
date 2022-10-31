@@ -8,13 +8,15 @@ import (
 	"os/exec"
 )
 
+// GetLogAll
+// Deprecated
 func GetLogAll(worker string) *bufio.Scanner {
-	models := utils.GetJson()
-	logLength := len(models[0].NodeList[0].PodList)
+	json := utils.GetJson()
+	logLength := len(json.Node.PodList)
 
 	var logPath string
 	for pods := 0; pods < logLength; pods++ {
-		pod := models[0].NodeList[0].PodList[pods]
+		pod := json.Node.PodList[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {
@@ -34,12 +36,12 @@ func GetLogAll(worker string) *bufio.Scanner {
 }
 
 func GetLogTailFlagN(worker string, line string) string {
-	models := utils.GetJson()
-	logLength := len(models[0].NodeList[0].PodList)
+	json := utils.GetJson()
+	logLength := len(json.Node.PodList)
 
 	var logPath string
 	for pods := 0; pods < logLength; pods++ {
-		pod := models[0].NodeList[0].PodList[pods]
+		pod := json.Node.PodList[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {

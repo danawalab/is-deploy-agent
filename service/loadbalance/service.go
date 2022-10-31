@@ -7,9 +7,9 @@ import (
 	"os"
 )
 
-func Restore(node int) {
-	path := getPropertiesPath(node)
-	loadbalancerMap := getLoadbalancerMap(node)
+func Restore() {
+	path := getPropertiesPath()
+	loadbalancerMap := getLoadbalancerMap()
 	lbLength := len(loadbalancerMap)
 
 	if isLengthOne(lbLength) {
@@ -20,9 +20,9 @@ func Restore(node int) {
 	}
 }
 
-func Exclude(node int, worker string) {
-	path := getPropertiesPath(node)
-	excludeMap := getExcludeMap(node, worker)
+func Exclude(worker string) {
+	path := getPropertiesPath()
+	excludeMap := getExcludeMap(worker)
 	exLength := len(excludeMap)
 
 	if isLengthOne(exLength) {
@@ -33,7 +33,7 @@ func Exclude(node int, worker string) {
 	}
 }
 
-func getWorkerMapResult(workerMap []model.WorkerMap) string {
+func getWorkerMapResult(workerMap []model.UriMap) string {
 	key := workerMap[0].Key
 	value := workerMap[0].Value
 	result := key + "=" + value
@@ -41,23 +41,23 @@ func getWorkerMapResult(workerMap []model.WorkerMap) string {
 	return result
 }
 
-func getExcludeMap(node int, worker string) []model.WorkerMap {
-	models := utils.GetJson()
-	podLength := len(models[0].NodeList[node].PodList)
-	var excludeMap []model.WorkerMap
+func getExcludeMap(worker string) []model.UriMap {
+	json := utils.GetJson()
+	podLength := len(json.Node.PodList)
+	var excludeMap []model.UriMap
 
 	for pods := 0; pods < podLength; pods++ {
-		pod := models[0].NodeList[node].PodList[pods]
+		pod := json.Node.PodList[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {
-			exLength := len(pod.ExcludeMap)
+			exLength := len(pod.LbMap)
 
 			for excludeMaps := 0; excludeMaps < exLength; excludeMaps++ {
-				key := pod.ExcludeMap[excludeMaps].Key
-				value := pod.ExcludeMap[excludeMaps].Value
+				key := pod.LbMap[excludeMaps].Key
+				value := pod.LbMap[excludeMaps].Value
 
-				excludeMap = append(excludeMap, model.WorkerMap{Key: key, Value: value})
+				excludeMap = append(excludeMap, model.UriMap{Key: key, Value: value})
 			}
 			break
 		}
@@ -65,34 +65,30 @@ func getExcludeMap(node int, worker string) []model.WorkerMap {
 	return excludeMap
 }
 
-func getLoadbalancerMap(node int) []model.WorkerMap {
-	models := utils.GetJson()
-	modelLength := len(models[0].NodeList[node].LbMap)
-	var loadbalancerMap []model.WorkerMap
+func getLoadbalancerMap() []model.UriMap {
+	json := utils.GetJson()
+	modelLength := len(json.Node.LbMap)
+	var loadbalancerMap []model.UriMap
 
 	if isLengthOne(modelLength) {
-		key := models[0].NodeList[node].LbMap[0].Key
-		value := models[0].NodeList[node].LbMap[0].Value
+		key := json.Node.LbMap[0].Key
+		value := json.Node.LbMap[0].Value
 
-		loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
+		loadbalancerMap = append(loadbalancerMap, model.UriMap{Key: key, Value: value})
 		return loadbalancerMap
 	} else {
 		for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
-			key := models[0].NodeList[node].LbMap[loadbalancer].Key
-			value := models[0].NodeList[node].LbMap[loadbalancer].Value
+			key := json.Node.LbMap[loadbalancer].Key
+			value := json.Node.LbMap[loadbalancer].Value
 
-			loadbalancerMap = append(loadbalancerMap, model.WorkerMap{Key: key, Value: value})
+			loadbalancerMap = append(loadbalancerMap, model.UriMap{Key: key, Value: value})
 		}
 		return loadbalancerMap
 	}
 }
 
 func writeFileString(path string, workerMap string) {
-	file, err := os.Create(path)
-	if err != nil {
-		fmt.Println(err)
-		//todo log로 변경
-	}
+	file, err := getFile(path)
 
 	_, err = file.Write([]byte(workerMap))
 	if err != nil {
@@ -102,12 +98,8 @@ func writeFileString(path string, workerMap string) {
 	defer file.Close()
 }
 
-func writeFileArray(path string, workerMaps []model.WorkerMap, length int) {
-	file, err := os.Create(path)
-	if err != nil {
-		fmt.Println(err)
-		//todo log로 변경
-	}
+func writeFileArray(path string, workerMaps []model.UriMap, length int) {
+	file, err := getFile(path)
 
 	for workerMap := 0; workerMap < length; workerMap++ {
 		key := workerMaps[workerMap].Key
@@ -122,6 +114,15 @@ func writeFileArray(path string, workerMaps []model.WorkerMap, length int) {
 	defer file.Close()
 }
 
+func getFile(path string) (*os.File, error) {
+	file, err := os.Create(path)
+	if err != nil {
+		fmt.Println(err)
+		//todo log로 변경
+	}
+	return file, err
+}
+
 func isLengthOne(length int) bool {
 	if length == 1 {
 		return true
@@ -129,7 +130,7 @@ func isLengthOne(length int) bool {
 	return false
 }
 
-func getPropertiesPath(node int) string {
-	jsons := utils.GetJson()
-	return jsons[0].NodeList[node].Path
+func getPropertiesPath() string {
+	json := utils.GetJson()
+	return json.Node.Path
 }

@@ -6,12 +6,12 @@ import (
 	"os/exec"
 )
 
-func Deploy(node int, worker string) {
-	executeShell(node, worker)
+func Deploy(worker string) {
+	executeShell(worker)
 }
 
-func executeShell(node int, worker string) {
-	shellPath := getShellPath(node, worker)
+func executeShell(worker string) {
+	shellPath := getShellPath(worker)
 	cmd := exec.Command(shellPath)
 	output, _ := cmd.Output()
 
@@ -19,13 +19,13 @@ func executeShell(node int, worker string) {
 	//todo log로 변경
 }
 
-func getShellPath(node int, worker string) string {
-	models := utils.GetJson()
-	podLength := len(models[0].NodeList[node].PodList)
-
+func getShellPath(worker string) string {
+	json := utils.GetJson()
+	podLength := len(json.Node.PodList)
 	var shellPath string
+
 	for pods := 0; pods < podLength; pods++ {
-		pod := models[0].NodeList[node].PodList[pods]
+		pod := json.Node.PodList[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {

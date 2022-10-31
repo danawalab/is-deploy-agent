@@ -16,11 +16,11 @@ func SetRouter() *gin.Engine {
 	{
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
-			loadbalance.Exclude(0, worker)
+			loadbalance.Exclude(worker)
 			context.String(http.StatusOK, "Router exclude Ready %s", worker)
 		})
 		lb.PUT("/restore", func(context *gin.Context) {
-			loadbalance.Restore(0)
+			loadbalance.Restore()
 			context.String(http.StatusOK, "Router restore Ready")
 		})
 	}
@@ -29,7 +29,7 @@ func SetRouter() *gin.Engine {
 	{
 		dp.PUT("/deploy", func(context *gin.Context) {
 			worker := context.Query("worker")
-			deploy.Deploy(0, worker)
+			deploy.Deploy(worker)
 			context.String(http.StatusOK, "Router deploy Ready %s", worker)
 		})
 	}

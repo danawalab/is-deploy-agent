@@ -9,8 +9,8 @@ import (
 )
 
 func FetchJson(*gin.Context) {
-	models := utils.GetJson()
-	consoleAddress := models[0].ConsoleInfo
+	json := utils.GetJson()
+	consoleAddress := json.ConsoleInfo
 
 	_, err := grab.Get(".", consoleAddress)
 	if err != nil {

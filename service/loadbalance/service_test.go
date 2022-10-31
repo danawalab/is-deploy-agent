@@ -7,15 +7,13 @@ import (
 )
 
 func TestReadJsonValue(t *testing.T) {
-	models := utils.GetJsonToTest()
-
-	arrayLength := models[0].NodeList[0].PodList[0].ExcludeMap
-
+	json := utils.GetJsonToTest()
+	arrayLength := json.Node.PodList[0].LbMap
 	fmt.Println(len(arrayLength))
 
 	for i := 0; i < len(arrayLength); i++ {
-		key := models[0].NodeList[0].PodList[0].ExcludeMap[i].Key
-		value := models[0].NodeList[0].PodList[0].ExcludeMap[i].Value
+		key := json.Node.PodList[0].LbMap[i].Key
+		value := json.Node.PodList[0].LbMap[i].Value
 
 		fmt.Printf("TestReadJsonValue, %s = %s", key, value)
 		fmt.Println()
@@ -23,16 +21,15 @@ func TestReadJsonValue(t *testing.T) {
 }
 
 func TestJsonValueSave(t *testing.T) {
-	models := utils.GetJsonToTest()
-
-	arrayLength := models[0].NodeList[0].PodList[0].ExcludeMap
+	json := utils.GetJsonToTest()
+	arrayLength := json.Node.PodList[0].LbMap
 
 	fmt.Println(len(arrayLength))
-	var newArray []ExcludeMap
 
+	var newArray []ExcludeMap
 	for i := 0; i < len(arrayLength); i++ {
-		key := models[0].NodeList[0].PodList[0].ExcludeMap[i].Key
-		value := models[0].NodeList[0].PodList[0].ExcludeMap[i].Value
+		key := json.Node.PodList[0].LbMap[i].Key
+		value := json.Node.PodList[0].LbMap[i].Value
 
 		newArray = append(newArray, ExcludeMap{key, value})
 	}
@@ -42,21 +39,21 @@ func TestJsonValueSave(t *testing.T) {
 
 func TestFindByName(t *testing.T) {
 	worker := "WAS1"
-	models := utils.GetJsonToTest()
+	json := utils.GetJsonToTest()
 
-	length := len(models[0].NodeList[0].PodList)
+	length := len(json.Node.PodList)
 	var newArray []ExcludeMap
 
 	for i := 0; i < length; i++ {
-		pod := models[0].NodeList[0].PodList[i]
+		pod := json.Node.PodList[i]
 		name := pod.Name
 
 		if worker == name {
-			exLength := len(pod.ExcludeMap)
+			exLength := len(pod.LbMap)
 
 			for j := 0; j < exLength; j++ {
-				key := pod.ExcludeMap[j].Key
-				value := pod.ExcludeMap[j].Value
+				key := pod.LbMap[j].Key
+				value := pod.LbMap[j].Value
 
 				newArray = append(newArray, ExcludeMap{key, value})
 			}
