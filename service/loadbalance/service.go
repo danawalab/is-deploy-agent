@@ -1,9 +1,9 @@
 package loadbalance
 
 import (
+	"fmt"
 	"is-deploy-agent/model"
 	"is-deploy-agent/utils"
-	"log"
 	"os"
 )
 
@@ -50,7 +50,7 @@ func getExcludeMap(node int, worker string) []model.WorkerMap {
 		pod := models[0].NodeList[node].PodList[pods]
 		name := pod.Name
 
-		if isNameEqual(name, worker) {
+		if utils.IsNameEqual(name, worker) {
 			exLength := len(pod.ExcludeMap)
 
 			for excludeMaps := 0; excludeMaps < exLength; excludeMaps++ {
@@ -63,13 +63,6 @@ func getExcludeMap(node int, worker string) []model.WorkerMap {
 		}
 	}
 	return excludeMap
-}
-
-func isNameEqual(name string, worker string) bool {
-	if name == worker {
-		return true
-	}
-	return false
 }
 
 func getLoadbalancerMap(node int) []model.WorkerMap {
@@ -97,17 +90,23 @@ func getLoadbalancerMap(node int) []model.WorkerMap {
 func writeFileString(path string, workerMap string) {
 	file, err := os.Create(path)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		//todo log로 변경
 	}
 
-	file.Write([]byte(workerMap))
+	_, err = file.Write([]byte(workerMap))
+	if err != nil {
+		fmt.Println(err)
+		//todo log로 변경
+	}
 	defer file.Close()
 }
 
 func writeFileArray(path string, workerMaps []model.WorkerMap, length int) {
 	file, err := os.Create(path)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		//todo log로 변경
 	}
 
 	for workerMap := 0; workerMap < length; workerMap++ {
@@ -115,7 +114,10 @@ func writeFileArray(path string, workerMaps []model.WorkerMap, length int) {
 		value := workerMaps[workerMap].Value
 
 		lb := key + "=" + value + "\n"
-		file.Write([]byte(lb))
+		_, err = file.Write([]byte(lb))
+		if err != nil {
+			return
+		}
 	}
 	defer file.Close()
 }

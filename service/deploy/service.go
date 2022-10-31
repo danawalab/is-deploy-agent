@@ -16,6 +16,7 @@ func executeShell(node int, worker string) {
 	output, _ := cmd.Output()
 
 	fmt.Println(string(output))
+	//todo log로 변경
 }
 
 func getShellPath(node int, worker string) string {
@@ -27,19 +28,11 @@ func getShellPath(node int, worker string) string {
 		pod := models[0].NodeList[node].PodList[pods]
 		name := pod.Name
 
-		if isNameEqual(name, worker) {
+		if utils.IsNameEqual(name, worker) {
 			shellPath = pod.ShPath
-
 			break
 		}
 	}
 
 	return shellPath
-}
-
-func isNameEqual(name string, worker string) bool {
-	if name == worker {
-		return true
-	}
-	return false
 }

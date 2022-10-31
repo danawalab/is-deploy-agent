@@ -6,8 +6,6 @@ import (
 )
 
 func main() {
-
 	server := router.SetRouter()
-
 	server.Run()
 }

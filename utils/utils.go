@@ -2,15 +2,15 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"is-deploy-agent/model"
-	"log"
 	"os"
 )
 
 func GetJson() []model.Model {
 	path, err := os.Open("./setting.json")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 
 	var models []model.Model
@@ -20,4 +20,11 @@ func GetJson() []model.Model {
 
 	defer path.Close()
 	return models
+}
+
+func IsNameEqual(name string, worker string) bool {
+	if name == worker {
+		return true
+	}
+	return false
 }

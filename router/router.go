@@ -7,10 +7,7 @@ import (
 	"is-deploy-agent/service/loadbalance"
 	"is-deploy-agent/service/log"
 	"net/http"
-	"sync"
 )
-
-var registry_mutex = sync.Mutex{}
 
 func SetRouter() *gin.Engine {
 	router := gin.Default()
@@ -57,18 +54,6 @@ func SetRouter() *gin.Engine {
 			line := context.Query("line")
 			logs := log.GetLogTailFlagN(worker, line)
 			context.String(http.StatusOK, logs)
-		})
-
-		lg.GET("/tail/f", func(context *gin.Context) {
-			worker := context.Query("worker")
-			logs := log.GetLogTailFlagF(worker)
-			for line := range logs.Lines {
-				go func() {
-					registry_mutex.Lock()
-					context.String(http.StatusOK, line.Text+"\n")
-					registry_mutex.Unlock()
-				}()
-			}
 		})
 	}
 

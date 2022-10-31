@@ -9,3 +9,5 @@ mv new.json setting.json
 rn new.json
 
 echo "sync setting.json end"
+
+#todo 조건 추가
