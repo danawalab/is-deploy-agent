@@ -1,103 +1,47 @@
-[
-  {
-    "service": "Example",
-    "consoleInfo": {
-      "address": "localhost:3000"
-    },
-    "agentInfo": {
-      "name": "Example Agent",
-      "ip": "127.0.0.1",
-      "port": "5000"
-    },
-    "nodeList": [
+{
+  "service": "Example",
+  "consoleInfo": {
+    "address": "localhost:3000"
+  },
+  "agentInfo": {
+    "name": "Example Agent",
+    "ip": "127.0.0.1",
+    "port": "5000"
+  },
+  "node": {
+    "name": "Example-Node1",
+    "ip": "127.0.0.1",
+    "port": "8080",
+    "path": "/etc/apache2/uriworkermap.properties",
+    "lbMap": [
       {
-        "name": "서버1",
-        "ip": "127.0.0.1",
-        "port": "8080",
-        "path": "/etc/apache2/uriworkermap.properties",
+        "key": "/*",
+        "value": "load_balancer"
+      }
+    ],
+    "podList": [
+      {
+        "name": "Example-Node1-Pod1",
         "lbMap": [
           {
             "key": "/*",
-            "value": "load_balancer"
+            "value": "load_balancer_ex1"
           }
         ],
-        "podList": [
-          {
-            "name": "WAS1",
-            "excludeMap": [
-              {
-                "key": "/was1",
-                "value": "load_balancer1"
-              },
-              {
-                "key": "/*",
-                "value": "load_balancer_ex1"
-              }
-            ],
-            "logPath": "./sample/catalina.out",
-            "shPath": "./sample/tomcat1.sh"
-          },
-          {
-            "name": "WAS2",
-            "excludeMap": [
-              {
-                "key": "/was2",
-                "value": "load_balancer2"
-              },
-              {
-                "key": "/*",
-                "value": "load_balancer_ex2"
-              }
-            ],
-            "logPath": "C:/tomcat2/logs/",
-            "shPath": "./sample/tomcat2.sh"
-          }
-        ]
+        "logPath": "./sample/catalina.out",
+        "shPath": "./sample/tomcat1.sh"
       },
       {
-        "name": "서버2",
-        "ip": "127.0.0.2",
-        "port": "8080",
-        "path": "C:/Apache24/conf/uriworkermap.properties",
+        "name": "Example-Node1-Pod2",
         "lbMap": [
           {
             "key": "/*",
-            "value": "load_balancer"
+            "value": "load_balancer_ex2"
           }
         ],
-        "podList": [
-          {
-            "name": "WAS3",
-            "excludeMap": [
-              {
-                "key": "/was3",
-                "value": "load_balancer_3"
-              },
-              {
-                "key": "/*",
-                "value": "load_balancer_ex3"
-              }
-            ],
-            "logPath": "C:/tomcat3/logs/",
-            "shPath": ""
-          },
-          {
-            "name": "WAS4",
-            "excludeMap": [
-              {
-                "key": "/was4",
-                "value": "load_balancer_4"
-              },
-              {
-                "key": "/*",
-                "value": "load_balancer_ex4"
-              }
-            ],
-            "logPath": "C:/tomcat4/logs/",
-            "shPath": ""
-          }
-        ]
+        "logPath": "./sample/catalina.out",
+        "shPath": "./sample/tomcat2.sh"
       }
     ]
   }
-]
+}

@@ -3,9 +3,9 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"is-deploy-agent/service/deploy"
+	"is-deploy-agent/service/fetch"
 	"is-deploy-agent/service/loadbalance"
 	"is-deploy-agent/service/log"
-	"is-deploy-agent/service/sync"
 	"net/http"
 )
 
@@ -16,11 +16,11 @@ func SetRouter() *gin.Engine {
 	{
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
-			loadbalance.Exclude(0, worker)
+			loadbalance.Exclude(worker)
 			context.String(http.StatusOK, "Router exclude Ready %s", worker)
 		})
 		lb.PUT("/restore", func(context *gin.Context) {
-			loadbalance.Restore(0)
+			loadbalance.Restore()
 			context.String(http.StatusOK, "Router restore Ready")
 		})
 	}
@@ -29,14 +29,14 @@ func SetRouter() *gin.Engine {
 	{
 		dp.PUT("/deploy", func(context *gin.Context) {
 			worker := context.Query("worker")
-			deploy.Deploy(0, worker)
+			deploy.Deploy(worker)
 			context.String(http.StatusOK, "Router deploy Ready %s", worker)
 		})
 	}
 
 	sc := router.Group("/sync")
 	{
-		sc.PUT("", sync.FetchJson)
+		sc.PUT("", fetch.FetchJson)
 	}
 
 	lg := router.Group("/logs")
@@ -54,14 +54,6 @@ func SetRouter() *gin.Engine {
 			line := context.Query("line")
 			logs := log.GetLogTailFlagN(worker, line)
 			context.String(http.StatusOK, logs)
-		})
-
-		lg.GET("/tail/f", func(context *gin.Context) {
-			worker := context.Query("worker")
-			logs := log.GetLogTailFlagF(worker)
-			for line := range logs.Lines {
-				context.String(http.StatusOK, line.Text)
-			}
 		})
 	}
 

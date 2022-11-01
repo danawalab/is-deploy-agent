@@ -6,40 +6,37 @@ import (
 	"os/exec"
 )
 
-func Deploy(node int, worker string) {
-	executeShell(node, worker)
+// Deploy
+// setting.json에 지정된 shell 경로를 통해 shell 실행 하여 배포
+func Deploy(worker string) {
+	executeShell(worker)
 }
 
-func executeShell(node int, worker string) {
-	shellPath := getShellPath(node, worker)
+// shell을 실행
+func executeShell(worker string) {
+	shellPath := getShellPath(worker)
 	cmd := exec.Command(shellPath)
 	output, _ := cmd.Output()
 
 	fmt.Println(string(output))
+	//todo log로 변경
 }
 
-func getShellPath(node int, worker string) string {
-	models := utils.GetJson()
-	podLength := len(models[0].NodeList[node].PodList)
-
+// shell의 경로를 반환
+func getShellPath(worker string) string {
+	json := utils.GetJson()
+	podLength := len(json.Node.PodList)
 	var shellPath string
+
 	for pods := 0; pods < podLength; pods++ {
-		pod := models[0].NodeList[node].PodList[pods]
+		pod := json.Node.PodList[pods]
 		name := pod.Name
 
-		if isNameEqual(name, worker) {
+		if utils.IsNameEqual(name, worker) {
 			shellPath = pod.ShPath
-
 			break
 		}
 	}
 
 	return shellPath
-}
-
-func isNameEqual(name string, worker string) bool {
-	if name == worker {
-		return true
-	}
-	return false
 }

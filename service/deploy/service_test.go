@@ -8,14 +8,14 @@ import (
 
 func ExcludeTestExecShell(t *testing.T) {
 	cmd := exec.Command("./test.sh")
-
 	output, _ := cmd.Output()
 
-	fmt.Println(string(output))
+	fmt.Println(output)
+	//todo log로 변경
 }
 
 // danawa Repository에서는 해당 기능 삭제
-/*c
+/*
 func ExcludeTestDownloadWAR(t *testing.T) {
 	models := getJson()
 
