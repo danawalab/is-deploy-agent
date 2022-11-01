@@ -6,10 +6,13 @@ import (
 	"os/exec"
 )
 
+// Deploy
+// setting.json에 지정된 shell 경로를 통해 shell 실행 하여 배포
 func Deploy(worker string) {
 	executeShell(worker)
 }
 
+// shell을 실행
 func executeShell(worker string) {
 	shellPath := getShellPath(worker)
 	cmd := exec.Command(shellPath)
@@ -19,6 +22,7 @@ func executeShell(worker string) {
 	//todo log로 변경
 }
 
+// shell의 경로를 반환
 func getShellPath(worker string) string {
 	json := utils.GetJson()
 	podLength := len(json.Node.PodList)

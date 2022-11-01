@@ -9,6 +9,7 @@ import (
 )
 
 // GetLogAll
+// 모든 로그를 읽어들이고 나서 반환
 // Deprecated
 func GetLogAll(worker string) *bufio.Scanner {
 	json := utils.GetJson()
@@ -35,6 +36,8 @@ func GetLogAll(worker string) *bufio.Scanner {
 	return scanner
 }
 
+// GetLogTailFlagN
+// tail -n을 사용하여 로그를 끝에서 부터 N번째 줄까지 반환
 func GetLogTailFlagN(worker string, line string) string {
 	json := utils.GetJson()
 	logLength := len(json.Node.PodList)

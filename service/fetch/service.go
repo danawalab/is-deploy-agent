@@ -8,6 +8,8 @@ import (
 	"os/exec"
 )
 
+// FetchJson
+// setting.json을 직접 서버에 접속에 vi에 수정하기 번거로워 console에서 수정 후 console에서 다운 받아 업데이트
 func FetchJson(*gin.Context) {
 	json := utils.GetJson()
 	consoleAddress := json.ConsoleInfo

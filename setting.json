@@ -22,7 +22,7 @@
     "podList": [
       {
         "name": "Example-Node1-Pod1",
-        "excludeMap": [
+        "lbMap": [
           {
             "key": "/*",
             "value": "load_balancer_ex1"
@@ -33,7 +33,7 @@
       },
       {
         "name": "Example-Node1-Pod2",
-        "excludeMap": [
+        "lbMap": [
           {
             "key": "/*",
             "value": "load_balancer_ex2"

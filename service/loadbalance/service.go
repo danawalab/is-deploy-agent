@@ -7,41 +7,47 @@ import (
 	"os"
 )
 
+// Restore
+// uriworkermap.properties 설정을 setting.json에 설정한 원래 값으로 복구
 func Restore() {
 	path := getPropertiesPath()
-	loadbalancerMap := getLoadbalancerMap()
+	loadbalancerMap := getNodeLbMap()
 	lbLength := len(loadbalancerMap)
 
 	if isLengthOne(lbLength) {
-		lb := getWorkerMapResult(loadbalancerMap)
+		lb := getLbMapResult(loadbalancerMap)
 		writeFileString(path, lb)
 	} else {
 		writeFileArray(path, loadbalancerMap, lbLength)
 	}
 }
 
+// Exclude
+// worker와 setting,json에 podList의 name 같으면 해당 pod는 uriworkermap.propertis를 수정하여 로드밸런서에 제외
 func Exclude(worker string) {
 	path := getPropertiesPath()
-	excludeMap := getExcludeMap(worker)
+	excludeMap := getPodLbMap(worker)
 	exLength := len(excludeMap)
 
 	if isLengthOne(exLength) {
-		ex := getWorkerMapResult(excludeMap)
+		ex := getLbMapResult(excludeMap)
 		writeFileString(path, ex)
 	} else {
 		writeFileArray(path, excludeMap, exLength)
 	}
 }
 
-func getWorkerMapResult(workerMap []model.UriMap) string {
-	key := workerMap[0].Key
-	value := workerMap[0].Value
+// lbMap이 1개면 바로 key=value로 반환
+func getLbMapResult(lbMap []model.UriMap) string {
+	key := lbMap[0].Key
+	value := lbMap[0].Value
 	result := key + "=" + value
 
 	return result
 }
 
-func getExcludeMap(worker string) []model.UriMap {
+// setting.json podList의 lbMap 반환
+func getPodLbMap(worker string) []model.UriMap {
 	json := utils.GetJson()
 	podLength := len(json.Node.PodList)
 	var excludeMap []model.UriMap
@@ -65,28 +71,22 @@ func getExcludeMap(worker string) []model.UriMap {
 	return excludeMap
 }
 
-func getLoadbalancerMap() []model.UriMap {
+// setting.json node의 lbMap 반환
+func getNodeLbMap() []model.UriMap {
 	json := utils.GetJson()
 	modelLength := len(json.Node.LbMap)
 	var loadbalancerMap []model.UriMap
 
-	if isLengthOne(modelLength) {
-		key := json.Node.LbMap[0].Key
-		value := json.Node.LbMap[0].Value
+	for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
+		key := json.Node.LbMap[loadbalancer].Key
+		value := json.Node.LbMap[loadbalancer].Value
 
 		loadbalancerMap = append(loadbalancerMap, model.UriMap{Key: key, Value: value})
-		return loadbalancerMap
-	} else {
-		for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
-			key := json.Node.LbMap[loadbalancer].Key
-			value := json.Node.LbMap[loadbalancer].Value
-
-			loadbalancerMap = append(loadbalancerMap, model.UriMap{Key: key, Value: value})
-		}
-		return loadbalancerMap
 	}
+	return loadbalancerMap
 }
 
+// lbMap이 1개일 경우
 func writeFileString(path string, workerMap string) {
 	file, err := getFile(path)
 
@@ -98,6 +98,7 @@ func writeFileString(path string, workerMap string) {
 	defer file.Close()
 }
 
+// lbMap이 2개 이상일 경우
 func writeFileArray(path string, workerMaps []model.UriMap, length int) {
 	file, err := getFile(path)
 
@@ -114,6 +115,7 @@ func writeFileArray(path string, workerMaps []model.UriMap, length int) {
 	defer file.Close()
 }
 
+// uriworkermap.properties 반환
 func getFile(path string) (*os.File, error) {
 	file, err := os.Create(path)
 	if err != nil {
@@ -130,6 +132,7 @@ func isLengthOne(length int) bool {
 	return false
 }
 
+// setting.json의 uriworkermap.properties 경로 반환
 func getPropertiesPath() string {
 	json := utils.GetJson()
 	return json.Node.Path
