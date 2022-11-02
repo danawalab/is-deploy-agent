@@ -12,9 +12,9 @@ import (
 )
 
 func ExcludeTestLogFileRead(t *testing.T) {
-	models := utils.GetJsonToTest()
+	json := utils.GetJsonToTest()
 
-	logPath := models[0].NodeList[0].PodList[0].LogPath
+	logPath := json.Node.PodList[0].LogPath
 
 	logs, err := os.Open(logPath)
 	if err != nil {
