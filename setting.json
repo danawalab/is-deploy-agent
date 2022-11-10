@@ -1,17 +1,7 @@
 {
   "service": "Example",
-  "consoleInfo": {
-    "address": "localhost:3000"
-  },
-  "agentInfo": {
-    "name": "Example Agent",
-    "ip": "127.0.0.1",
-    "port": "5000"
-  },
   "node": {
     "name": "Example-Node1",
-    "ip": "127.0.0.1",
-    "port": "8080",
     "path": "/etc/apache2/uriworkermap.properties",
     "lbMap": [
       {

@@ -16,9 +16,7 @@ func GetJson() model.Model {
 	}
 
 	var models model.Model
-
-	decoder := json.NewDecoder(path)
-	decoder.Decode(&models)
+	json.NewDecoder(path).Decode(&models)
 
 	defer path.Close()
 	return models
