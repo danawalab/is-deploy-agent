@@ -17,11 +17,15 @@ func SetRouter() *gin.Engine {
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
 			loadbalance.Exclude(worker)
-			context.String(http.StatusOK, "Router exclude Ready %s", worker)
+			context.JSON(http.StatusOK, gin.H{
+				"message": worker + " is Exclude Complete",
+			})
 		})
 		lb.PUT("/restore", func(context *gin.Context) {
 			loadbalance.Restore()
-			context.String(http.StatusOK, "Router restore Ready")
+			context.JSON(http.StatusOK, gin.H{
+				"message": "Restore Complete",
+			})
 		})
 	}
 
@@ -30,13 +34,28 @@ func SetRouter() *gin.Engine {
 		dp.PUT("/deploy", func(context *gin.Context) {
 			worker := context.Query("worker")
 			deploy.Deploy(worker)
-			context.String(http.StatusOK, "Router deploy Ready %s", worker)
+			context.JSON(http.StatusOK, gin.H{
+				"message": "Deploy Complete",
+			})
 		})
 	}
 
 	sc := router.Group("/sync")
 	{
-		sc.PUT("", fetch.FetchJson)
+		sc.GET("", func(context *gin.Context) {
+			json := fetch.GetSettingJson()
+			context.JSON(http.StatusOK, gin.H{
+				"data": json,
+			})
+		})
+
+		sc.PUT("", func(context *gin.Context) {
+			body, _ := context.GetRawData()
+			fetch.SyncSettingJson(string(body))
+			context.JSON(http.StatusOK, gin.H{
+				"message": "setting.json sync complete",
+			})
+		})
 	}
 
 	lg := router.Group("/logs")
@@ -60,7 +79,9 @@ func SetRouter() *gin.Engine {
 	hp := router.Group("/health-check")
 	{
 		hp.GET("", func(context *gin.Context) {
-			context.String(http.StatusOK, "Health Good")
+			context.JSON(http.StatusOK, gin.H{
+				"message": "Health Good",
+			})
 		})
 	}
 

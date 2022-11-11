@@ -11,7 +11,6 @@ func ExcludeTestExecShell(t *testing.T) {
 	output, _ := cmd.Output()
 
 	fmt.Println(output)
-	//todo log로 변경
 }
 
 // danawa Repository에서는 해당 기능 삭제

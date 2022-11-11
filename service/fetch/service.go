@@ -1,32 +1,37 @@
 package fetch
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"github.com/cavaliergopher/grab/v3"
-	"github.com/gin-gonic/gin"
-	"is-deploy-agent/utils"
-	"os/exec"
+	"is-deploy-agent/model"
+	"log"
+	"os"
 )
 
-// FetchJson
-// setting.json을 직접 서버에 접속에 vi에 수정하기 번거로워 console에서 수정 후 console에서 다운 받아 업데이트
-func FetchJson(*gin.Context) {
-	json := utils.GetJson()
-	consoleAddress := json.ConsoleInfo
-
-	_, err := grab.Get(".", consoleAddress)
+// GetSettingJson
+// setting.json을 읽어서 반환한다
+func GetSettingJson() model.Model {
+	file, err := os.ReadFile("./setting.json")
 	if err != nil {
 		fmt.Println(err)
-		//todo log로 변경
 	}
 
-	cmd := exec.Command("./sync.sh")
-	output, err := cmd.Output()
+	var models model.Model
+	json.NewDecoder(bytes.NewBuffer(file)).Decode(&models)
+
+	return models
+}
+
+func SyncSettingJson(json string) {
+	file, err := os.Create("./setting.json")
 	if err != nil {
-		fmt.Println(err)
-		//todo log로 변경
+		log.Println(err)
 	}
+	defer file.Close()
 
-	fmt.Println("setting.json Update", string(output))
-	//todo log로 변경
+	_, err = file.Write([]byte(json))
+	if err != nil {
+		log.Println(err)
+	}
 }
