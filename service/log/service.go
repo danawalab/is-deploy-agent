@@ -2,8 +2,8 @@ package log
 
 import (
 	"bufio"
-	"fmt"
 	"is-deploy-agent/utils"
+	"log"
 	"os"
 	"os/exec"
 )
@@ -28,8 +28,7 @@ func GetLogAll(worker string) *bufio.Scanner {
 
 	logs, err := os.Open(logPath)
 	if err != nil {
-		fmt.Println(err)
-		//todo log로 변경
+		log.Println(err)
 	}
 	scanner := bufio.NewScanner(logs)
 	defer logs.Close()
@@ -56,8 +55,7 @@ func GetLogTailFlagN(worker string, line string) string {
 	cmd := exec.Command("tail", "-n", line, logPath)
 	output, err := cmd.Output()
 	if err != nil {
-		fmt.Println(err)
-		//todo log로 변경
+		log.Println(err)
 	}
 	return string(output)
 }

@@ -18,7 +18,7 @@ func SetRouter() *gin.Engine {
 			worker := context.Query("worker")
 			loadbalance.Exclude(worker)
 			context.JSON(http.StatusOK, gin.H{
-				"message": worker + "is Exclude Complete",
+				"message": worker + " is Exclude Complete",
 			})
 		})
 		lb.PUT("/restore", func(context *gin.Context) {
@@ -50,7 +50,8 @@ func SetRouter() *gin.Engine {
 		})
 
 		sc.PUT("", func(context *gin.Context) {
-			fetch.SyncSettingJson()
+			body, _ := context.GetRawData()
+			fetch.SyncSettingJson(string(body))
 			context.JSON(http.StatusOK, gin.H{
 				"message": "setting.json sync complete",
 			})

@@ -1,9 +1,9 @@
 package loadbalance
 
 import (
-	"fmt"
 	"is-deploy-agent/model"
 	"is-deploy-agent/utils"
+	"log"
 	"os"
 )
 
@@ -92,8 +92,7 @@ func writeFileString(path string, workerMap string) {
 
 	_, err = file.Write([]byte(workerMap))
 	if err != nil {
-		fmt.Println(err)
-		//todo log로 변경
+		log.Println(err)
 	}
 	defer file.Close()
 }
@@ -109,7 +108,7 @@ func writeFileArray(path string, workerMaps []model.UriMap, length int) {
 		lb := key + "=" + value + "\n"
 		_, err = file.Write([]byte(lb))
 		if err != nil {
-			return
+			log.Println(err)
 		}
 	}
 	defer file.Close()
@@ -119,8 +118,7 @@ func writeFileArray(path string, workerMaps []model.UriMap, length int) {
 func getFile(path string) (*os.File, error) {
 	file, err := os.Create(path)
 	if err != nil {
-		fmt.Println(err)
-		//todo log로 변경
+		log.Println(err)
 	}
 	return file, err
 }
