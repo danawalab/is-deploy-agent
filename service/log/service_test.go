@@ -3,7 +3,6 @@ package log
 import (
 	"bufio"
 	"fmt"
-	"github.com/hpcloud/tail"
 	"is-deploy-agent/utils"
 	"log"
 	"os"
@@ -28,22 +27,23 @@ func ExcludeTestLogFileRead(t *testing.T) {
 	}
 }
 
-func TestTailLog(t *testing.T) {
-	//mx := sync.RWMutex{}
-	//var ch = make(chan string)
+/*
+	func TestTailLog(t *testing.T) {
+		//mx := sync.RWMutex{}
+		//var ch = make(chan string)
 
-	ta, err := tail.TailFile("../../sample/catalina.out", tail.Config{Follow: true, ReOpen: true, MustExist: true, Poll: true, Location: &tail.SeekInfo{Whence: 2}})
-	if err != nil {
-		fmt.Println(err)
+		ta, err := tail.TailFile("../../sample/catalina.out", tail.Config{Follow: true, ReOpen: true, MustExist: true, Poll: true, Location: &tail.SeekInfo{Whence: 2}})
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		//var lgs string
+		for line := range ta.Lines {
+			lg := line.Text
+			fmt.Println(lg)
+		}
 	}
-
-	//var lgs string
-	for line := range ta.Lines {
-		lg := line.Text
-		fmt.Println(lg)
-	}
-}
-
+*/
 func ExcludeTailTypeA(t *testing.T) {
 	cmd := exec.Command("tail", "-n 10", "../../sample/catalina.out")
 
