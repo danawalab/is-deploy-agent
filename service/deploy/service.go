@@ -1,8 +1,8 @@
 package deploy
 
 import (
-	"fmt"
 	"is-deploy-agent/utils"
+	"log"
 	"os/exec"
 )
 
@@ -18,8 +18,7 @@ func executeShell(worker string) {
 	cmd := exec.Command(shellPath)
 	output, _ := cmd.Output()
 
-	fmt.Println(string(output))
-	//todo log로 변경
+	log.Println("Execute Shell Script : ", string(output))
 }
 
 // shell의 경로를 반환

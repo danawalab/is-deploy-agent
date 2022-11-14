@@ -2,8 +2,8 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 	"is-deploy-agent/model"
+	"log"
 	"os"
 )
 
@@ -12,7 +12,7 @@ import (
 func GetJson() model.Model {
 	path, err := os.Open("./setting.json")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	var models model.Model
