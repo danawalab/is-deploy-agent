@@ -16,16 +16,29 @@ func SetRouter() *gin.Engine {
 	{
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
-			loadbalance.Exclude(worker)
-			context.JSON(http.StatusOK, gin.H{
-				"message": worker + " is Exclude Complete",
-			})
+			err := loadbalance.Exclude(worker)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": worker + " is Exclude Complete",
+				})
+			}
 		})
+
 		lb.PUT("/restore", func(context *gin.Context) {
-			loadbalance.Restore()
-			context.JSON(http.StatusOK, gin.H{
-				"message": "Restore Complete",
-			})
+			err := loadbalance.Restore()
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": "Restore Complete",
+				})
+			}
 		})
 	}
 
@@ -33,10 +46,16 @@ func SetRouter() *gin.Engine {
 	{
 		dp.PUT("/deploy", func(context *gin.Context) {
 			worker := context.Query("worker")
-			deploy.Deploy(worker)
-			context.JSON(http.StatusOK, gin.H{
-				"message": "Deploy Complete",
-			})
+			err := deploy.Deploy(worker)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": "Deploy Complete",
+				})
+			}
 		})
 	}
 
@@ -63,8 +82,14 @@ func SetRouter() *gin.Engine {
 		lg.GET("/tail/n", func(context *gin.Context) {
 			worker := context.Query("worker")
 			line := context.Query("line")
-			logs := log.GetLogTailFlagN(worker, line)
-			context.String(http.StatusOK, logs)
+			logs, err := log.GetLogTailFlagN(worker, line)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.String(http.StatusOK, logs)
+			}
 		})
 	}
 

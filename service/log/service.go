@@ -8,8 +8,11 @@ import (
 
 // GetLogTailFlagN
 // tail -n을 사용하여 로그를 끝에서 부터 N번째 줄까지 반환
-func GetLogTailFlagN(worker string, line string) string {
-	json := utils.GetJson()
+func GetLogTailFlagN(worker string, line string) (string, error) {
+	json, err := utils.GetJson()
+	if err != nil {
+		log.Println(err)
+	}
 	logLength := len(json.Node.PodList)
 
 	var logPath string
@@ -28,5 +31,5 @@ func GetLogTailFlagN(worker string, line string) string {
 	if err != nil {
 		log.Println(err)
 	}
-	return string(output)
+	return string(output), err
 }
