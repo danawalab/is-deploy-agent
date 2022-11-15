@@ -1,39 +1,10 @@
 package log
 
 import (
-	"bufio"
 	"is-deploy-agent/utils"
 	"log"
-	"os"
 	"os/exec"
 )
-
-// GetLogAll
-// 모든 로그를 읽어들이고 나서 반환
-// Deprecated
-func GetLogAll(worker string) *bufio.Scanner {
-	json := utils.GetJson()
-	logLength := len(json.Node.PodList)
-
-	var logPath string
-	for pods := 0; pods < logLength; pods++ {
-		pod := json.Node.PodList[pods]
-		name := pod.Name
-
-		if utils.IsNameEqual(name, worker) {
-			logPath = pod.LogPath
-			break
-		}
-	}
-
-	logs, err := os.Open(logPath)
-	if err != nil {
-		log.Println(err)
-	}
-	scanner := bufio.NewScanner(logs)
-	defer logs.Close()
-	return scanner
-}
 
 // GetLogTailFlagN
 // tail -n을 사용하여 로그를 끝에서 부터 N번째 줄까지 반환
