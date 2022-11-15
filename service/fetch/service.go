@@ -23,7 +23,7 @@ func GetSettingJson() model.Model {
 	return models
 }
 
-func SyncSettingJson(json string) {
+func SyncSettingJson(json string) error {
 	file, err := os.Create("./setting.json")
 	if err != nil {
 		log.Println(err)
@@ -34,4 +34,5 @@ func SyncSettingJson(json string) {
 	if err != nil {
 		log.Println(err)
 	}
+	return err
 }
