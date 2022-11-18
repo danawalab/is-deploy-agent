@@ -7,13 +7,13 @@ import (
 )
 
 func TestReadJsonValue(t *testing.T) {
-	json := utils.GetJsonToTest()
-	arrayLength := json.Node.PodList[0].LbMap
+	node := utils.GetJsonToTest()
+	arrayLength := node.PodList[0].LbMap
 	fmt.Println(len(arrayLength))
 
 	for i := 0; i < len(arrayLength); i++ {
-		key := json.Node.PodList[0].LbMap[i].Key
-		value := json.Node.PodList[0].LbMap[i].Value
+		key := node.PodList[0].LbMap[i].Key
+		value := node.PodList[0].LbMap[i].Value
 
 		fmt.Printf("TestReadJsonValue, %s = %s", key, value)
 		fmt.Println()
@@ -21,15 +21,15 @@ func TestReadJsonValue(t *testing.T) {
 }
 
 func TestJsonValueSave(t *testing.T) {
-	json := utils.GetJsonToTest()
-	arrayLength := json.Node.PodList[0].LbMap
+	node := utils.GetJsonToTest()
+	arrayLength := node.PodList[0].LbMap
 
 	fmt.Println(len(arrayLength))
 
 	var newArray []ExcludeMap
 	for i := 0; i < len(arrayLength); i++ {
-		key := json.Node.PodList[0].LbMap[i].Key
-		value := json.Node.PodList[0].LbMap[i].Value
+		key := node.PodList[0].LbMap[i].Key
+		value := node.PodList[0].LbMap[i].Value
 
 		newArray = append(newArray, ExcludeMap{key, value})
 	}
@@ -39,13 +39,13 @@ func TestJsonValueSave(t *testing.T) {
 
 func TestFindByName(t *testing.T) {
 	worker := "WAS1"
-	json := utils.GetJsonToTest()
+	node := utils.GetJsonToTest()
 
-	length := len(json.Node.PodList)
+	length := len(node.PodList)
 	var newArray []ExcludeMap
 
 	for i := 0; i < length; i++ {
-		pod := json.Node.PodList[i]
+		pod := node.PodList[i]
 		name := pod.Name
 
 		if worker == name {

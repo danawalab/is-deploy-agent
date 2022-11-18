@@ -9,15 +9,15 @@ import (
 // GetLogTailFlagN
 // tail -n을 사용하여 로그를 끝에서 부터 N번째 줄까지 반환
 func GetLogTailFlagN(worker string, line string) (string, error) {
-	json, err := utils.GetJson()
+	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
 	}
-	logLength := len(json.Node.PodList)
+	logLength := len(node.PodList)
 
 	var logPath string
 	for pods := 0; pods < logLength; pods++ {
-		pod := json.Node.PodList[pods]
+		pod := node.PodList[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {

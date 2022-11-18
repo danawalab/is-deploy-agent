@@ -35,15 +35,15 @@ func executeShell(worker string) error {
 
 // shell의 경로를 반환
 func getShellPath(worker string) (string, error) {
-	json, err := utils.GetJson()
+	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
 	}
-	podLength := len(json.Node.PodList)
+	podLength := len(node.PodList)
 	var shellPath string
 
 	for pods := 0; pods < podLength; pods++ {
-		pod := json.Node.PodList[pods]
+		pod := node.PodList[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {

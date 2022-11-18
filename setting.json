@@ -1,37 +1,36 @@
 {
-  "service": "Example",
-  "node": {
-    "name": "Example-Node1",
-    "path": "/etc/apache2/uriworkermap.properties",
-    "lbMap": [
-      {
-        "key": "/*",
-        "value": "load_balancer"
-      }
-    ],
-    "podList": [
-      {
-        "name": "Example-Node1-Pod1",
-        "lbMap": [
-          {
-            "key": "/*",
-            "value": "load_balancer_ex1"
-          }
-        ],
-        "logPath": "./sample/catalina.out",
-        "shPath": "./sample/tomcat1.sh"
-      },
-      {
-        "name": "Example-Node1-Pod2",
-        "lbMap": [
-          {
-            "key": "/*",
-            "value": "load_balancer_ex2"
-          }
-        ],
-        "logPath": "./sample/catalina.out",
-        "shPath": "./sample/tomcat2.sh"
-      }
-    ]
-  }
+  "name": "Example-Node1",
+  "agent": {
+    "host": "http://localhost",
+    "port": ":5000"
+  },
+  "path": "/etc/apache2/uriworkermap.properties",
+  "lbMap": [
+    {
+      "key": "/*",
+      "value": "load_balancer"
+    }
+  ],
+  "podList": [
+    {
+      "name": "Example-Node1-Pod1",
+      "lbMap": [
+        {
+          "key": "/*",
+          "value": "load_balncer_ex1\"\n        }\n      ],a
+      "logPath": "./sample/catalina.out",
+      "shPath": "./sample/tomcat1.sh"
+    },
+    {
+      "name": "Example-Node1-Pod2",
+      "lbMap": [
+        {
+          "key": "/*",
+          "value": "load_balancer_ex2"
+        }
+      ],
+      "logPath": "./sample/catalina.out",
+      "shPath": "./sample/tomcat2.sh"
+    }
+  ]
 }

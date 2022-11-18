@@ -66,15 +66,15 @@ func getLbMapResult(lbMap []model.UriMap) string {
 
 // setting.json podList의 lbMap 반환
 func getPodLbMap(worker string) ([]model.UriMap, error) {
-	json, err := utils.GetJson()
+	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
 	}
-	podLength := len(json.Node.PodList)
+	podLength := len(node.PodList)
 	var excludeMap []model.UriMap
 
 	for pods := 0; pods < podLength; pods++ {
-		pod := json.Node.PodList[pods]
+		pod := node.PodList[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {
@@ -94,17 +94,17 @@ func getPodLbMap(worker string) ([]model.UriMap, error) {
 
 // setting.json node의 lbMap 반환
 func getNodeLbMap() ([]model.UriMap, error) {
-	json, err := utils.GetJson()
+	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
 	}
 
-	modelLength := len(json.Node.LbMap)
+	modelLength := len(node.LbMap)
 	var loadbalancerMap []model.UriMap
 
 	for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
-		key := json.Node.LbMap[loadbalancer].Key
-		value := json.Node.LbMap[loadbalancer].Value
+		key := node.LbMap[loadbalancer].Key
+		value := node.LbMap[loadbalancer].Value
 
 		loadbalancerMap = append(loadbalancerMap, model.UriMap{Key: key, Value: value})
 	}
@@ -157,9 +157,9 @@ func isLengthOne(length int) bool {
 
 // setting.json의 uriworkermap.properties 경로 반환
 func getPropertiesPath() (string, error) {
-	json, err := utils.GetJson()
+	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
 	}
-	return json.Node.Path, err
+	return node.Path, err
 }

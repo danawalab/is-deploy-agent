@@ -11,9 +11,9 @@ import (
 )
 
 func ExcludeTestLogFileRead(t *testing.T) {
-	json := utils.GetJsonToTest()
+	node := utils.GetJsonToTest()
 
-	logPath := json.Node.PodList[0].LogPath
+	logPath := node.PodList[0].LogPath
 
 	logs, err := os.Open(logPath)
 	if err != nil {

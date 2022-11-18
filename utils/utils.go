@@ -9,14 +9,14 @@ import (
 
 // GetJson
 // setting.json을 읽어서 반환
-func GetJson() (model.Model, error) {
+func GetJson() (model.Node, error) {
 	path, err := os.Open("./setting.json")
 	if err != nil {
 		log.Println(err)
 	}
 	defer path.Close()
 
-	var models model.Model
+	var models model.Node
 	err = json.NewDecoder(path).Decode(&models)
 	if err != nil {
 		log.Println(err)
