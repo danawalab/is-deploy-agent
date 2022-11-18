@@ -17,7 +17,9 @@
       "lbMap": [
         {
           "key": "/*",
-          "value": "load_balncer_ex1\"\n        }\n      ],a
+          "value": "load_balancer_ex1"
+        }
+      ],
       "logPath": "./sample/catalina.out",
       "shPath": "./sample/tomcat1.sh"
     },
