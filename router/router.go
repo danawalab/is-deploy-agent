@@ -15,9 +15,16 @@ func SetRouter() *gin.Engine {
 	lb := router.Group("/load-balance")
 	{
 		lb.GET("", func(context *gin.Context) {
-			context.JSON(http.StatusOK, gin.H{
-				"message": "",
-			})
+			lbStatus, err := loadbalance.CheckLbStatus()
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": lbStatus,
+				})
+			}
 		})
 
 		lb.PUT("/exclude", func(context *gin.Context) {
