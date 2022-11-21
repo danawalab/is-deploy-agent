@@ -14,18 +14,44 @@ func SetRouter() *gin.Engine {
 
 	lb := router.Group("/load-balance")
 	{
+		lb.GET("", func(context *gin.Context) {
+			lbStatus, err := loadbalance.CheckLbStatus()
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": lbStatus,
+				})
+			}
+		})
+
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
-			loadbalance.Exclude(worker)
-			context.JSON(http.StatusOK, gin.H{
-				"message": worker + " is Exclude Complete",
-			})
+			err := loadbalance.Exclude(worker)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": worker + " is Exclude Complete",
+				})
+			}
 		})
+
 		lb.PUT("/restore", func(context *gin.Context) {
-			loadbalance.Restore()
-			context.JSON(http.StatusOK, gin.H{
-				"message": "Restore Complete",
-			})
+			err := loadbalance.Restore()
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": "Restore Complete",
+				})
+			}
 		})
 	}
 
@@ -33,10 +59,16 @@ func SetRouter() *gin.Engine {
 	{
 		dp.PUT("/deploy", func(context *gin.Context) {
 			worker := context.Query("worker")
-			deploy.Deploy(worker)
-			context.JSON(http.StatusOK, gin.H{
-				"message": "Deploy Complete",
-			})
+			err := deploy.Deploy(worker)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": "Deploy Complete",
+				})
+			}
 		})
 	}
 
@@ -51,28 +83,32 @@ func SetRouter() *gin.Engine {
 
 		sc.PUT("", func(context *gin.Context) {
 			body, _ := context.GetRawData()
-			fetch.SyncSettingJson(string(body))
-			context.JSON(http.StatusOK, gin.H{
-				"message": "setting.json sync complete",
-			})
+			err := fetch.SyncSettingJson(string(body))
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": "setting.json sync complete",
+				})
+			}
 		})
 	}
 
 	lg := router.Group("/logs")
 	{
-		lg.GET("/all", func(context *gin.Context) {
-			worker := context.Query("worker")
-			logs := log.GetLogAll(worker)
-			for logs.Scan() {
-				context.String(http.StatusOK, "%s\n", logs.Text())
-			}
-		})
-
 		lg.GET("/tail/n", func(context *gin.Context) {
 			worker := context.Query("worker")
 			line := context.Query("line")
-			logs := log.GetLogTailFlagN(worker, line)
-			context.String(http.StatusOK, logs)
+			logs, err := log.GetLogTailFlagN(worker, line)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.String(http.StatusOK, logs)
+			}
 		})
 	}
 

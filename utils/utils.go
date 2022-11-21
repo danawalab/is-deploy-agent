@@ -9,17 +9,20 @@ import (
 
 // GetJson
 // setting.json을 읽어서 반환
-func GetJson() model.Model {
+func GetJson() (model.Node, error) {
 	path, err := os.Open("./setting.json")
 	if err != nil {
 		log.Println(err)
 	}
-
-	var models model.Model
-	json.NewDecoder(path).Decode(&models)
-
 	defer path.Close()
-	return models
+
+	var models model.Node
+	err = json.NewDecoder(path).Decode(&models)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return models, err
 }
 
 // IsNameEqual

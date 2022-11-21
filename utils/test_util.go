@@ -7,13 +7,13 @@ import (
 	"os"
 )
 
-func GetJsonToTest() model.Model {
+func GetJsonToTest() model.Node {
 	path, err := os.Open("../../setting.json")
 	if err != nil {
 		log.Println(err)
 	}
 
-	var models model.Model
+	var models model.Node
 
 	decoder := json.NewDecoder(path)
 	err = decoder.Decode(&models)
