@@ -20,6 +20,10 @@ func SetRouter() *gin.Engine {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
 				})
+			} else if lbStatus == "Not Match" {
+				context.JSON(http.StatusOK, gin.H{
+					"error": lbStatus,
+				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
 					"message": lbStatus,
