@@ -19,7 +19,7 @@ func CheckLbStatus() (string, error) {
 
 	file, err := os.Open(path)
 	if err != nil {
-		log.Println(err)
+		log.Println("uriworkermap.properties를 찾지 못했습니다. ", err)
 	}
 	defer file.Close()
 
@@ -102,7 +102,11 @@ func CheckLbStatus() (string, error) {
 	}
 
 	// node와 pod 둘 다 못 찾을 경우 Not Match로 리턴
-	return "Not Match", err
+	if err == nil {
+		return "Not Match", err
+	} else {
+		return err.Error(), err
+	}
 }
 
 func deleteDuplicate(array []string) []string {
