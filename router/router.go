@@ -79,10 +79,16 @@ func SetRouter() *gin.Engine {
 	sc := router.Group("/sync")
 	{
 		sc.GET("", func(context *gin.Context) {
-			json := fetch.GetSettingJson()
-			context.JSON(http.StatusOK, gin.H{
-				"data": json,
-			})
+			json, err := fetch.GetSettingJson()
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"data": json,
+				})
+			}
 		})
 
 		sc.PUT("", func(context *gin.Context) {

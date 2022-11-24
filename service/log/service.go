@@ -12,6 +12,7 @@ func GetLogTailFlagN(worker string, line string) (string, error) {
 	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
+		return "", err
 	}
 	logLength := len(node.PodList)
 
@@ -30,6 +31,7 @@ func GetLogTailFlagN(worker string, line string) (string, error) {
 	output, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
+		return "", err
 	}
 	return string(output), err
 }

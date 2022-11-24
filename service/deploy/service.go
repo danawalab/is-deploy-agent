@@ -12,6 +12,7 @@ func Deploy(worker string) error {
 	err := executeShell(worker)
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 
 	return err
@@ -22,11 +23,13 @@ func executeShell(worker string) error {
 	shellPath, err := getShellPath(worker)
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 	cmd := exec.Command(shellPath)
 	output, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 
 	log.Println("Execute Shell Script : ", string(output))
@@ -38,6 +41,7 @@ func getShellPath(worker string) (string, error) {
 	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
+		return "", err
 	}
 	podLength := len(node.PodList)
 	var shellPath string

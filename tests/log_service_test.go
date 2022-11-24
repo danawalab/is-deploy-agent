@@ -1,9 +1,8 @@
-package log
+package tests
 
 import (
 	"bufio"
 	"fmt"
-	"is-deploy-agent/utils"
 	"log"
 	"os"
 	"os/exec"
@@ -11,7 +10,7 @@ import (
 )
 
 func ExcludeTestLogFileRead(t *testing.T) {
-	node := utils.GetJsonToTest()
+	node := GetJsonToTest()
 
 	logPath := node.PodList[0].LogPath
 

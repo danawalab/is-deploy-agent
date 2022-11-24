@@ -15,11 +15,13 @@ func CheckLbStatus() (string, error) {
 	path, err := getPropertiesPath()
 	if err != nil {
 		log.Println(err)
+		return "", err
 	}
 
 	file, err := os.Open(path)
 	if err != nil {
 		log.Println("uriworkermap.properties를 찾지 못했습니다. ", err)
+		return "", err
 	}
 	defer file.Close()
 
@@ -34,6 +36,7 @@ func CheckLbStatus() (string, error) {
 	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
+		return "", err
 	}
 	podLength := len(node.PodList)
 
@@ -128,19 +131,29 @@ func Restore() error {
 	path, err := getPropertiesPath()
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 
 	loadbalancerMap, err := getNodeLbMap()
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 	lbLength := len(loadbalancerMap)
 
 	if isLengthOne(lbLength) {
 		lb := getLbMapResult(loadbalancerMap)
-		writeFileString(path, lb)
+		err = writeFileString(path, lb)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 	} else {
-		writeFileArray(path, loadbalancerMap, lbLength)
+		err = writeFileArray(path, loadbalancerMap, lbLength)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 	}
 
 	return err
@@ -152,19 +165,29 @@ func Exclude(worker string) error {
 	path, err := getPropertiesPath()
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 
 	excludeMap, err := getPodLbMap(worker)
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 	exLength := len(excludeMap)
 
 	if isLengthOne(exLength) {
 		ex := getLbMapResult(excludeMap)
-		writeFileString(path, ex)
+		err = writeFileString(path, ex)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 	} else {
-		writeFileArray(path, excludeMap, exLength)
+		err = writeFileArray(path, excludeMap, exLength)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
 	}
 
 	return err
@@ -184,6 +207,7 @@ func getPodLbMap(worker string) ([]model.UriMap, error) {
 	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
 	podLength := len(node.PodList)
 	var excludeMap []model.UriMap
@@ -212,6 +236,7 @@ func getNodeLbMap() ([]model.UriMap, error) {
 	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
 
 	modelLength := len(node.LbMap)
@@ -227,18 +252,20 @@ func getNodeLbMap() ([]model.UriMap, error) {
 }
 
 // lbMap이 1개일 경우
-func writeFileString(path string, workerMap string) {
+func writeFileString(path string, workerMap string) error {
 	file, err := getFile(path)
 	defer file.Close()
 
 	_, err = file.Write([]byte(workerMap))
 	if err != nil {
 		log.Println(err)
+		return err
 	}
+	return err
 }
 
 // lbMap이 2개 이상일 경우
-func writeFileArray(path string, workerMaps []model.UriMap, length int) {
+func writeFileArray(path string, workerMaps []model.UriMap, length int) error {
 	file, err := getFile(path)
 	defer file.Close()
 
@@ -250,8 +277,10 @@ func writeFileArray(path string, workerMaps []model.UriMap, length int) {
 		_, err = file.Write([]byte(lb))
 		if err != nil {
 			log.Println(err)
+			return err
 		}
 	}
+	return err
 }
 
 // uriworkermap.properties 반환
@@ -259,6 +288,7 @@ func getFile(path string) (*os.File, error) {
 	file, err := os.Create(path)
 	if err != nil {
 		log.Println(err)
+		return nil, err
 	}
 	return file, err
 }
@@ -275,6 +305,7 @@ func getPropertiesPath() (string, error) {
 	node, err := utils.GetJson()
 	if err != nil {
 		log.Println(err)
+		return "", err
 	}
 	return node.Path, err
 }
