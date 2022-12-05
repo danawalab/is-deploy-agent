@@ -1,15 +1,14 @@
-package loadbalance
+package tests
 
 import (
 	"bufio"
 	"fmt"
-	"is-deploy-agent/utils"
 	"os"
 	"testing"
 )
 
 func ExcludeTestReadJsonValue(t *testing.T) {
-	node := utils.GetJsonToTest()
+	node := GetJsonToTest()
 	arrayLength := node.PodList[0].LbMap
 	fmt.Println(len(arrayLength))
 
@@ -23,7 +22,7 @@ func ExcludeTestReadJsonValue(t *testing.T) {
 }
 
 func ExcludeTestJsonValueSave(t *testing.T) {
-	node := utils.GetJsonToTest()
+	node := GetJsonToTest()
 	arrayLength := node.PodList[0].LbMap
 
 	fmt.Println(len(arrayLength))
@@ -41,7 +40,7 @@ func ExcludeTestJsonValueSave(t *testing.T) {
 
 func ExcludeTestFindByName(t *testing.T) {
 	worker := "WAS1"
-	node := utils.GetJsonToTest()
+	node := GetJsonToTest()
 
 	length := len(node.PodList)
 	var newArray []ExcludeMap
@@ -67,7 +66,7 @@ func ExcludeTestFindByName(t *testing.T) {
 }
 
 func TestReadProperties(t *testing.T) {
-	path := utils.GetJsonToTest().Path
+	path := GetJsonToTest().Path
 	file, _ := os.Open(path)
 	defer file.Close()
 
@@ -80,7 +79,7 @@ func TestReadProperties(t *testing.T) {
 
 	resultLength := len(result)
 
-	node := utils.GetJsonToTest()
+	node := GetJsonToTest()
 
 	length := len(node.PodList)
 	newArray := make([]string, 0)

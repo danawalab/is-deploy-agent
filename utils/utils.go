@@ -13,6 +13,7 @@ func GetJson() (model.Node, error) {
 	path, err := os.Open("./setting.json")
 	if err != nil {
 		log.Println(err)
+		return model.Node{}, err
 	}
 	defer path.Close()
 
@@ -20,6 +21,7 @@ func GetJson() (model.Node, error) {
 	err = json.NewDecoder(path).Decode(&models)
 	if err != nil {
 		log.Println(err)
+		return model.Node{}, err
 	}
 
 	return models, err

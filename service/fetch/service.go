@@ -3,7 +3,6 @@ package fetch
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"is-deploy-agent/model"
 	"log"
 	"os"
@@ -11,31 +10,35 @@ import (
 
 // GetSettingJson
 // setting.json을 읽어서 반환한다
-func GetSettingJson() model.Node {
+func GetSettingJson() (model.Node, error) {
 	file, err := os.ReadFile("./setting.json")
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
+		return model.Node{}, err
 	}
 
 	var models model.Node
 	err = json.NewDecoder(bytes.NewBuffer(file)).Decode(&models)
 	if err != nil {
 		log.Println(err)
+		return model.Node{}, err
 	}
 
-	return models
+	return models, err
 }
 
 func SyncSettingJson(json string) error {
 	file, err := os.Create("./setting.json")
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 	defer file.Close()
 
 	_, err = file.Write([]byte(json))
 	if err != nil {
 		log.Println(err)
+		return err
 	}
 	return err
 }
