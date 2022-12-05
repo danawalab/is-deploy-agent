@@ -1,0 +1,41 @@
+name: is-deploy-agent build & deploy
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: Go mod tidy
+        run: go mod tidy
+
+      - name: pwd1
+        run : pwd
+
+      - name: Go Build
+        run: go build main.go
+
+      - name: pwd2
+        run: pwd
+
+      - name: ls
+        run: ls -l
+
+      - name: Change name
+        run: mv main is-deploy-agent
+
+#  Deploy:
+#    steps:
+
