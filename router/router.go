@@ -6,6 +6,7 @@ import (
 	"is-deploy-agent/service/fetch"
 	"is-deploy-agent/service/loadbalance"
 	"is-deploy-agent/service/log"
+	"is-deploy-agent/utils"
 	"net/http"
 )
 
@@ -120,6 +121,12 @@ func SetRouter() *gin.Engine {
 					"message": "agent update complete",
 				})
 			}
+		})
+
+		up.GET("/version", func(context *gin.Context) {
+			context.JSON(http.StatusOK, gin.H{
+				"message": utils.Version,
+			})
 		})
 	}
 
