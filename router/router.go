@@ -106,6 +106,23 @@ func SetRouter() *gin.Engine {
 		})
 	}
 
+	up := router.Group("/update")
+	{
+		up.PUT("/:version", func(context *gin.Context) {
+			version := context.Params.ByName("version")
+			err := fetch.UpdateAgent(version)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": "agent update complete",
+				})
+			}
+		})
+	}
+
 	lg := router.Group("/logs")
 	{
 		lg.GET("/tail/n", func(context *gin.Context) {
