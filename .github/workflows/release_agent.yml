@@ -27,6 +27,9 @@ jobs:
       - name: Change name
         run: mv main is-deploy-agent
 
+      - name: Tar zip
+        run: tar -zcvf is-deploy-agent.tar.gz is-deploy-agent
+
       - name: Upload file to release
         uses: svenstaro/upload-release-action@v2
         with:
