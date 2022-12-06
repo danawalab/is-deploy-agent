@@ -7,13 +7,13 @@ backup_dir=backup-dir
 
 function execute_agent() {
   # unzip new agent.tar.gz
-  tar -zxvf $agent$version.tar.gz
+  tar -zxvf $agent-$version.tar.gz
   # create backup directory
-  if [ -e $backup_dir ]; then
+  if [ ! -e $backup_dir ]; then
     mkdir $backup_dir
   fi
   # move new agent.tar.gz  backup-dir directory
-  mv $agent$version.tar.gz $backup_dir
+  mv $agent-$version.tar.gz $backup_dir
   # run new agent
   ./$agent $port
 }
@@ -27,12 +27,12 @@ else
     echo "agent version is empty"
   else
     # check agent
-    if [ -e $agent ]; then
+    if [ ! -e $agent ]; then
       # download agent
-      wget https://github.com/danawalab/$agent/releases/download/$version/$agent$version.tar.gz
+      wget https://github.com/danawalab/$agent/releases/download/$version/$agent-$version.tar.gz
     else
       # download agent
-      wget https://github.com/danawalab/$agent/releases/download/$version/$agent$version.tar.gz
+      wget https://github.com/danawalab/$agent/releases/download/$version/$agent-$version.tar.gz
       # kill old agent
       kill -9 $(ps -ef | grep $agent | awk '{print $2}')
       # delete old agent
