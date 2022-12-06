@@ -35,7 +35,7 @@ jobs:
         with:
           repo_token: ${{ secrets.TOKEN }}
           file: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent.tar.gz
-          asset_name: is-deploy-agent
+          asset_name: is-deploy-agent.tar.gz
           tag: ${{ github.ref }}
 #          overwrite: true
 #          body: "new agent"
