@@ -28,6 +28,8 @@ jobs:
         run: mv main is-deploy-agent
 
   deploy:
+    runs-on: ubuntu-latest
+
     steps:
       - name: ls
         run: ls -l
