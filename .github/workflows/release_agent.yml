@@ -2,8 +2,8 @@ name: is-deploy-agent build & deploy
 
 on:
   push:
-#    tags:
-#      - '*'
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -27,19 +27,13 @@ jobs:
       - name: Change name
         run: mv main is-deploy-agent
 
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: ls
-        run: ls -l
-#      - name: Upload file to release
-#        uses: svenstaro/upload-release-action@v2
-#        with:
-#          repo_token: ${{ secrets.GITHUB_TOKEN }}
-#          file: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent
-#          asset_name: is-deploy-agent
-#          tag: ${{ github.ref }}
+      - name: Upload file to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent
+          asset_name: is-deploy-agent
+          tag: ${{ github.ref }}
 #          overwrite: true
 #          body: "new agent"
 
