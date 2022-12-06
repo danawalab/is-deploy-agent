@@ -34,7 +34,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.TOKEN }}
-          file: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent
+          file: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent.tar.gz
           asset_name: is-deploy-agent
           tag: ${{ github.ref }}
 #          overwrite: true
