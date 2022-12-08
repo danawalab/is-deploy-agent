@@ -6,6 +6,7 @@ import (
 	"is-deploy-agent/service/fetch"
 	"is-deploy-agent/service/loadbalance"
 	"is-deploy-agent/service/log"
+	"is-deploy-agent/utils"
 	"net/http"
 )
 
@@ -40,7 +41,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": worker + " is Exclude Complete",
+					"message": worker + " is exclude complete",
 				})
 			}
 		})
@@ -53,7 +54,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": "Restore Complete",
+					"message": "restore complete",
 				})
 			}
 		})
@@ -70,7 +71,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": "Deploy Complete",
+					"message": worker + " deploy complete",
 				})
 			}
 		})
@@ -78,6 +79,8 @@ func SetRouter() *gin.Engine {
 
 	sc := router.Group("/sync")
 	{
+		// deprecated
+		// GET Method 사용 안하고 있음
 		sc.GET("", func(context *gin.Context) {
 			json, err := fetch.GetSettingJson()
 			if err != nil {
@@ -116,10 +119,17 @@ func SetRouter() *gin.Engine {
 					"error": err,
 				})
 			} else {
+				// 에러가 없으면 에이전트 종료 후 삭제하는데 반환 값은 의미가 없는가 아닌가?
 				context.JSON(http.StatusOK, gin.H{
 					"message": "agent update complete",
 				})
 			}
+		})
+
+		up.GET("/version", func(context *gin.Context) {
+			context.JSON(http.StatusOK, gin.H{
+				"message": utils.Version,
+			})
 		})
 	}
 
