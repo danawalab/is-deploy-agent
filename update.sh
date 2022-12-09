@@ -1,22 +1,26 @@
 #!/bin/bash
 
 export agent="is-deploy-agent"
+echo "${agent}"
 export port=$1
+echo "${port}"
 export version=$2
+echo "${version}"
 export backup_dir=backup-dir
 
 function execute_agent() {
   # unzip new agent.tar.gz
+  echo "tar -zxvf ${agent}-${version}.tar.gz"
   tar -zxvf ${agent}-${version}.tar.gz
   # create backup directory
   if [ ! -e $backup_dir ]; then
     mkdir $backup_dir
   fi
   # move new agent.tar.gz  backup-dir directory
+  echo "mv ${agent}-${version}.tar.gz $backup_dir"
   mv ${agent}-${version}.tar.gz $backup_dir
-
-  echo "${1} ${2}"
   # run new agent
+  echo "/home/isdeploy/$1 $2"
   /home/isdeploy/$1 $2
 }
 
