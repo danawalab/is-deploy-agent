@@ -3,6 +3,7 @@ package fetch
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"is-deploy-agent/model"
 	"is-deploy-agent/utils"
 	"log"
@@ -54,7 +55,8 @@ func UpdateAgent(version string) error {
 	port := node.Agent.Port
 
 	cmd := exec.Command("./update.sh", port[1:], version)
-	_, err = cmd.Output()
+	out, err := cmd.Output()
+	fmt.Print(out)
 	if err != nil {
 		log.Println(err)
 		return err
