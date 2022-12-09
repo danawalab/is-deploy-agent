@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"is-deploy-agent/model"
-	"is-deploy-agent/utils"
 	"log"
 	"os"
 	"os/exec"
@@ -46,14 +45,14 @@ func SyncSettingJson(json string) error {
 }
 
 func UpdateAgent(version string) error {
-	node, err := utils.GetJson()
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	port := node.Agent.Port
+	//node, err := utils.GetJson()
+	//if err != nil {
+	//	log.Println(err)
+	//	return err
+	//}
+	//port := node.Agent.Port
 
-	cmd := exec.Command("./update.sh", port[1:], version)
+	cmd := exec.Command("./update.sh 5000 t1.1.2")
 	out, err := cmd.Output()
 	log.Println(">>> 1 ", string(out))
 	log.Println(">>> 2 ", out)
