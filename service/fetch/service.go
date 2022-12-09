@@ -53,7 +53,7 @@ func UpdateAgent(version string) error {
 	}
 	port := node.Agent.Port
 
-	cmd := exec.Command("./update.sh", version, port[1:])
+	cmd := exec.Command("./update.sh", port[1:], version)
 	_, err = cmd.Output()
 	if err != nil {
 		log.Println(err)
