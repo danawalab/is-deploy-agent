@@ -40,3 +40,14 @@ jobs:
 #          overwrite: true
 #          body: "new agent"
 
+      -  name: Upload to minio
+         uses: lovellfelix/minio-deploy-action@v1
+         with:
+          endpoint: ${{ secrets.MINIO_ENDPOINT }}
+          access_key: ${{ secrets.MINIO_ACCESS_KEY }}
+          secret_key: ${{ secrets.MINIO_SECRET_KEY }}
+          bucket: 'is-deploy'
+          # Optional inputs with their defaults:
+          source_dir: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent-${{ github.ref_name }}.tar.gz
+          target_dir: '/'
+

@@ -1,0 +1,44 @@
+###############################                                    NOT WORK                                     ###############################
+############################### 사내 깃랩에서는 파일 업로드는 되는거 같은데 다운로드 페이지에 들어가면 404 나옴 ###############################
+variables:
+  IS_DEPLOY_AGENT: "is-deploy-agent-${CI_COMMIT_TAG}"
+  PACKAGE_REGISTRY_URL: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/${CI_PROJECT_NAME}/${CI_COMMIT_TAG}/"
+
+stages:
+  - build
+  - upload
+  - release
+
+build:
+  stage: build
+  image: golang:1.19
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - go build main.go
+    - mv main is-deploy-agent
+    - tar -zcvf ${IS_DEPLOY_AGENT}.tar.gz is-deploy-agent
+    - mkdir agent
+    - cp ${IS_DEPLOY_AGENT}.tar.gz agent
+  artifacts:
+    paths:
+      - agent/
+
+upload:
+  stage: upload
+  image: curlimages/curl:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file agent/${IS_DEPLOY_AGENT}.tar.gz ${PACKAGE_REGISTRY_URL}${IS_DEPLOY_AGENT}.tar.gz
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $CI_COMMIT_TAG
+  script:
+    - |
+      release-cli create --name "Release $CI_COMMIT_TAG" --description "Release New Agent $CI_COMMIT_TAG" --tag-name $CI_COMMIT_TAG \
+        --assets-link "{\"name\":\"${IS_DEPLOY_AGENT}\",\"url\":\"${PACKAGE_REGISTRY_URL}${IS_DEPLOY_AGENT}.tar.gz\"}"
