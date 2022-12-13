@@ -41,7 +41,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": worker + " is exclude complete",
+					"message": worker + " 가 제외되었습니다",
 				})
 			}
 		})
@@ -54,7 +54,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": "restore complete",
+					"message": "연결이 복원되었습니다",
 				})
 			}
 		})
@@ -71,7 +71,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": worker + " deploy complete",
+					"message": worker + " 가 배포되었습니다",
 				})
 			}
 		})
@@ -103,7 +103,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": "setting.json sync complete",
+					"message": "setting.json 동기화 완료",
 				})
 			}
 		})
@@ -121,7 +121,7 @@ func SetRouter() *gin.Engine {
 			} else {
 				// 에러가 없으면 에이전트 종료 후 삭제하는데 반환 값은 의미가 없는가 아닌가?
 				context.JSON(http.StatusOK, gin.H{
-					"message": "agent update complete",
+					"message": "에이전트 업데이트 완료",
 				})
 			}
 		})
@@ -153,7 +153,7 @@ func SetRouter() *gin.Engine {
 	{
 		hp.GET("", func(context *gin.Context) {
 			context.JSON(http.StatusOK, gin.H{
-				"message": "Health Good",
+				"message": "정상적으로 연결되었습니다",
 			})
 		})
 	}
