@@ -55,6 +55,7 @@ func UpdateAgent(version string) error {
 
 	cmd := exec.Command("./update.sh", port[1:], version)
 	_, err = cmd.Output()
+
 	if err != nil {
 		log.Println(err)
 		return err

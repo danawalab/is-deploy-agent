@@ -31,12 +31,7 @@ else
       # download agent
       wget https://github.com/danawalab/$agent/releases/download/$version/$agent-$version.tar.gz
     else
-      # download agent
-      wget https://github.com/danawalab/$agent/releases/download/$version/$agent-$version.tar.gz
-      # kill old agent
-      kill -9 $(ps -ef | grep $agent | awk '{print $2}')
-      # delete old agent
-      rm $agent
+      ./update2.sh $port $version
     fi
     execute_agent
   fi
