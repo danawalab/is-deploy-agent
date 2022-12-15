@@ -73,7 +73,7 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": worker + "에 + " + version + "이 성공적으로 배포되었습니다",
+					"message": worker + "에 " + version + "이 성공적으로 배포되었습니다",
 				})
 			}
 		})
