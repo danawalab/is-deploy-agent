@@ -1,3 +1,3 @@
 package utils
 
-const Version = "t1.2.1"
+const Version = "1.0.0"
