@@ -8,8 +8,8 @@ import (
 
 // Deploy
 // setting.json에 지정된 shell 경로를 통해 shell 실행 하여 배포
-func Deploy(worker string) error {
-	err := executeShell(worker)
+func Deploy(worker string, version string) error {
+	err := executeShell(worker, version)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -19,13 +19,13 @@ func Deploy(worker string) error {
 }
 
 // shell을 실행
-func executeShell(worker string) error {
+func executeShell(worker string, version string) error {
 	shellPath, err := getShellPath(worker)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-	cmd := exec.Command(shellPath)
+	cmd := exec.Command(shellPath, version)
 	output, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
