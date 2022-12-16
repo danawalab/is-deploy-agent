@@ -3,6 +3,7 @@ package tests
 import (
 	"fmt"
 	"os/exec"
+	"strings"
 	"testing"
 )
 
@@ -65,3 +66,21 @@ func ExcludeTestDeploy(t *testing.T) {
 	}
 }
 */
+
+func TestParameter(t *testing.T) {
+	arguments := "abc def ghi jkl mno p qrs tuv wxy z 123123"
+	//iNeedManyParameter("abc", "def", "ghi", "jkl", "mno", "p", "qrs", "tuv", "wxy", "z", "123123")
+	slice := strings.Split(arguments, " ")
+
+	fmt.Println(slice)
+	//for _, str := range slice {
+	//	iNeedManyParameter(str)
+	//}
+	iNeedManyParameter(slice[0:]...)
+}
+
+func iNeedManyParameter(args ...string) {
+	println("=================================== TEST START ===================================")
+	fmt.Println(args)
+	println("=================================== TEST END ===================================")
+}
