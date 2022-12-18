@@ -4,12 +4,15 @@ import (
 	"is-deploy-agent/utils"
 	"log"
 	"os/exec"
+	"strings"
 )
 
 // Deploy
 // setting.json에 지정된 shell 경로를 통해 shell 실행 하여 배포
-func Deploy(worker string, version string) error {
-	err := executeShell(worker, version)
+func Deploy(worker string, arguments string) error {
+	argument := strings.Split(arguments, " ")
+
+	err := executeShell(worker, argument...)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -19,13 +22,13 @@ func Deploy(worker string, version string) error {
 }
 
 // shell을 실행
-func executeShell(worker string, version string) error {
+func executeShell(worker string, arguments ...string) error {
 	shellPath, err := getShellPath(worker)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-	cmd := exec.Command(shellPath, version)
+	cmd := exec.Command(shellPath, arguments...)
 	output, err := cmd.Output()
 	if err != nil {
 		log.Println(err)

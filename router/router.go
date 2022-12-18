@@ -64,16 +64,16 @@ func SetRouter() *gin.Engine {
 	{
 		dp.PUT("/deploy", func(context *gin.Context) {
 			worker := context.Query("worker")
-			version := context.Query("version")
+			arguments := context.Query("arguments")
 
-			err := deploy.Deploy(worker, version)
+			err := deploy.Deploy(worker, arguments)
 			if err != nil {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": worker + "에 " + version + "이 성공적으로 배포되었습니다",
+					"message": worker + " 가 성공적으로 배포되었습니다",
 				})
 			}
 		})
