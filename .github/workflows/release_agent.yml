@@ -41,10 +41,3 @@ jobs:
           release_name: ${{ github.ref_name }}
 #          body: "new agent"
 
-      - name: Mirroring Gitlab
-        uses: pixta-dev/repository-mirroring-action@v1
-        with:
-          target_repo_url:
-            ${{ secrets.GITLAB_REPO_URL }}
-          ssh_private_key:
-            ${{ secrets.GITLAB_SSH_KEY }}
