@@ -37,5 +37,14 @@ jobs:
           file: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent-${{ github.ref_name }}.tar.gz
           asset_name: is-deploy-agent-${{ github.ref_name }}.tar.gz
           tag: ${{ github.ref }}
-#          overwrite: true
+          overwrite: true
+          release_name: ${{ github.ref_name }}
 #          body: "new agent"
+
+      - name: Mirroring Gitlab
+        uses: pixta-dev/repository-mirroring-action@v1
+        with:
+          target_repo_url:
+            ${{ secrets.GITLAB_REPO_URL }}
+          ssh_private_key:
+            ${{ secrets.GITLAB_SSH_KEY }}
