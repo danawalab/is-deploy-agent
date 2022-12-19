@@ -37,7 +37,8 @@ jobs:
           file: /home/runner/work/is-deploy-agent/is-deploy-agent/is-deploy-agent-${{ github.ref_name }}.tar.gz
           asset_name: is-deploy-agent-${{ github.ref_name }}.tar.gz
           tag: ${{ github.ref }}
-#          overwrite: true
+          overwrite: true
+          release_name: ${{ github.ref_name }}
 #          body: "new agent"
 
       - name: Mirroring Gitlab
