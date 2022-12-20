@@ -21,7 +21,7 @@ func SetRouter() *gin.Engine {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
 				})
-			} else if lbStatus == "Not Match" {
+			} else if lbStatus == "매칭되는 거 없음" {
 				context.JSON(http.StatusOK, gin.H{
 					"error": lbStatus,
 				})
@@ -111,8 +111,6 @@ func SetRouter() *gin.Engine {
 		})
 	}
 
-	// 1.0.0 버전
-	// /update API는 update.sh이 내부 보안 정책과 sh스크립트 미완성으로 사용 금지
 	up := router.Group("/update")
 	{
 		up.PUT("/:version", func(context *gin.Context) {

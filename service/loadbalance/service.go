@@ -106,7 +106,7 @@ func CheckLbStatus() (string, error) {
 
 	// node와 pod 둘 다 못 찾을 경우 Not Match로 리턴
 	if err == nil {
-		return "Not Match", err
+		return "매칭되는 거 없음", err
 	} else {
 		return err.Error(), err
 	}

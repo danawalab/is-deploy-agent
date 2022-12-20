@@ -30,9 +30,10 @@ else
     if [ ! -e $agent ]; then
       # download agent
       wget https://github.com/danawalab/$agent/releases/download/$version/$agent-$version.tar.gz
+
+      execute_agent
     else
-      ./update2.sh $port $version
+      ./agent-update.sh $port $version
     fi
-    execute_agent
   fi
 fi
