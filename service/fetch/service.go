@@ -51,7 +51,10 @@ func SyncSettingJson(json string) error {
 
 // UpdateAgent
 // 에이전트 동적 업데이트 및 다운그레이드
-// 1.0.0 버전에서는 사용 금지 update.sh 미완성 및 내부 보안 정책에 의해 사용 하기 힘듬
+// agent.sh에 업데이트 기능까지 전부 넣으면 중간에 에이전트를 종료 시켜서 실행중 이던 sh도 종료됨
+// agent-update.sh을 따로 만들어 agent.sh이 agent에 의해 실행 되면 인수 값을 agent-update.sh에 전달
+// 해당 agent-update.sh이 기존 agent 죽여도 실행 됨
+// 종종 제대로 동작 안하는 일이 있음 확인 필요 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 func UpdateAgent(version string) error {
 	node, err := utils.GetJson()
 	if err != nil {
@@ -60,7 +63,7 @@ func UpdateAgent(version string) error {
 	}
 	port := node.Agent.Port
 
-	cmd := exec.Command("./update.sh", port[1:], version)
+	cmd := exec.Command("./agent.sh", port[1:], version)
 	_, err = cmd.Output()
 
 	if err != nil {
