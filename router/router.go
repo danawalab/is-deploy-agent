@@ -76,7 +76,8 @@ func SetRouter() *gin.Engine {
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": output,
+					"message": "배포 쉘 스크립트가 실행 되었습니다.",
+					"output":  output,
 				})
 			}
 		})
