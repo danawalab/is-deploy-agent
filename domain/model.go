@@ -1,4 +1,4 @@
-package model
+package domain
 
 type Node struct {
 	Name    string    `json:"name"`

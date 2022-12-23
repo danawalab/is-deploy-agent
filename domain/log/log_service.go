@@ -9,7 +9,7 @@ import (
 // GetLogTailFlagN
 // tail -n을 사용하여 로그를 끝에서 부터 N번째 줄까지 반환
 func GetLogTailFlagN(worker string, line string) (string, error) {
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err

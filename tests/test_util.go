@@ -2,18 +2,18 @@ package tests
 
 import (
 	"encoding/json"
-	"is-deploy-agent/model"
+	"is-deploy-agent/domain"
 	"log"
 	"os"
 )
 
-func GetJsonToTest() model.Node {
+func GetJsonToTest() domain.Node {
 	path, err := os.Open("../../setting.json")
 	if err != nil {
 		log.Println(err)
 	}
 
-	var models model.Node
+	var models domain.Node
 
 	decoder := json.NewDecoder(path)
 	err = decoder.Decode(&models)

@@ -23,12 +23,12 @@ func TestTomcatHealthCheck(t *testing.T) {
 	root      6261  6259  0 07:32 pts/7    00:00:00 grep /root/tomcat
 
 	--- PASS: TestTomcatHealthCheck (0.00s)
-	PASS
-	ok      command-line-arguments  0.005s
 =======================================================================================================================
 exec.Command는 파이프라인 '|' 이 적응 안됨 그래서 지금위 테스트 코드와 같이 사용하거나 따로 파이프라인을 만들어 줘야함
 
 root      6259  6254  0 07:32 pts/7    00:00:00 bash -c ps -ef | grep /root/tomcat
 root      6261  6259  0 07:32 pts/7    00:00:00 grep /root/tomcat
 이 두줄을 빼거나 없애는 방법? tomcat 프로세스 여부 확인에 방해 됨
+
+-> 톰캣의 포트 여부로 톰캣이 돌아 가는지 확인 하는 방법
 */

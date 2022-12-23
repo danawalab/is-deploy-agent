@@ -2,10 +2,12 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"is-deploy-agent/service/deploy"
-	"is-deploy-agent/service/fetch"
-	"is-deploy-agent/service/loadbalance"
-	"is-deploy-agent/service/log"
+	"is-deploy-agent/domain/deploy"
+	"is-deploy-agent/domain/healthCheck"
+	"is-deploy-agent/domain/loadBalance"
+	"is-deploy-agent/domain/log"
+	"is-deploy-agent/domain/setting"
+	"is-deploy-agent/domain/update"
 	"is-deploy-agent/utils"
 	"net/http"
 )
@@ -13,10 +15,10 @@ import (
 func SetRouter() *gin.Engine {
 	router := gin.Default()
 
-	lb := router.Group("/load-balance")
+	lb := router.Group("/api/v1/load-balance")
 	{
 		lb.GET("", func(context *gin.Context) {
-			lbStatus, err := loadbalance.CheckLbStatus()
+			lbStatus, err := loadBalance.CheckLbStatus()
 			if err != nil {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
@@ -34,7 +36,7 @@ func SetRouter() *gin.Engine {
 
 		lb.PUT("/exclude", func(context *gin.Context) {
 			worker := context.Query("worker")
-			err := loadbalance.Exclude(worker)
+			err := loadBalance.Exclude(worker)
 			if err != nil {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
@@ -47,7 +49,7 @@ func SetRouter() *gin.Engine {
 		})
 
 		lb.PUT("/restore", func(context *gin.Context) {
-			err := loadbalance.Restore()
+			err := loadBalance.Restore()
 			if err != nil {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
@@ -60,45 +62,31 @@ func SetRouter() *gin.Engine {
 		})
 	}
 
-	dp := router.Group("/webapp")
+	dp := router.Group("/api/v1/deploy")
 	{
-		dp.PUT("/deploy", func(context *gin.Context) {
+		dp.PUT("/shell", func(context *gin.Context) {
 			worker := context.Query("worker")
 			arguments := context.Query("arguments")
 
-			err := deploy.Deploy(worker, arguments)
+			output, err := deploy.Deploy(worker, arguments)
+
 			if err != nil {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
 				})
 			} else {
 				context.JSON(http.StatusOK, gin.H{
-					"message": worker + " 가 성공적으로 배포되었습니다",
+					"message": output,
 				})
 			}
 		})
 	}
 
-	sc := router.Group("/sync")
+	set := router.Group("/api/v1/setting")
 	{
-		// deprecated
-		// GET Method 사용 안하고 있음
-		sc.GET("", func(context *gin.Context) {
-			json, err := fetch.GetSettingJson()
-			if err != nil {
-				context.JSON(http.StatusOK, gin.H{
-					"error": err,
-				})
-			} else {
-				context.JSON(http.StatusOK, gin.H{
-					"data": json,
-				})
-			}
-		})
-
-		sc.PUT("", func(context *gin.Context) {
+		set.PUT("", func(context *gin.Context) {
 			body, _ := context.GetRawData()
-			err := fetch.SyncSettingJson(string(body))
+			err := setting.SyncSettingJson(string(body))
 			if err != nil {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
@@ -111,11 +99,11 @@ func SetRouter() *gin.Engine {
 		})
 	}
 
-	up := router.Group("/update")
+	up := router.Group("/api/v1/update")
 	{
 		up.PUT("/:version", func(context *gin.Context) {
 			version := context.Params.ByName("version")
-			err := fetch.UpdateAgent(version)
+			err := update.AgentUpdate(version)
 			if err != nil {
 				context.JSON(http.StatusOK, gin.H{
 					"error": err,
@@ -135,7 +123,7 @@ func SetRouter() *gin.Engine {
 		})
 	}
 
-	lg := router.Group("/logs")
+	lg := router.Group("/api/v1/logs")
 	{
 		lg.GET("/tail/n", func(context *gin.Context) {
 			worker := context.Query("worker")
@@ -151,12 +139,27 @@ func SetRouter() *gin.Engine {
 		})
 	}
 
-	hp := router.Group("/health-check")
+	hc := router.Group("/api/v1/health-check")
 	{
-		hp.GET("", func(context *gin.Context) {
+		hc.GET("/agent", func(context *gin.Context) {
 			context.JSON(http.StatusOK, gin.H{
 				"message": "정상적으로 연결되었습니다",
 			})
+		})
+
+		hc.GET("/tomcat", func(context *gin.Context) {
+			tomcat := context.Query("tomcat")
+
+			output, err := healthCheck.TomcatHealthCheck(tomcat)
+			if err != nil {
+				context.JSON(http.StatusOK, gin.H{
+					"error": err,
+				})
+			} else {
+				context.JSON(http.StatusOK, gin.H{
+					"message": output,
+				})
+			}
 		})
 	}
 

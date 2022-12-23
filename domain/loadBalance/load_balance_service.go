@@ -1,8 +1,8 @@
-package loadbalance
+package loadBalance
 
 import (
 	"bufio"
-	"is-deploy-agent/model"
+	"is-deploy-agent/domain"
 	"is-deploy-agent/utils"
 	"log"
 	"os"
@@ -33,7 +33,7 @@ func CheckLbStatus() (string, error) {
 	}
 	uriWorkerMapLength := len(uriWorkerMap)
 
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err
@@ -194,7 +194,7 @@ func Exclude(worker string) error {
 }
 
 // lbMap이 1개면 바로 key=value로 반환
-func getLbMapResult(lbMap []model.UriMap) string {
+func getLbMapResult(lbMap []domain.UriMap) string {
 	key := lbMap[0].Key
 	value := lbMap[0].Value
 	result := key + "=" + value
@@ -203,14 +203,14 @@ func getLbMapResult(lbMap []model.UriMap) string {
 }
 
 // setting.json podList의 lbMap 반환
-func getPodLbMap(worker string) ([]model.UriMap, error) {
-	node, err := utils.GetJson()
+func getPodLbMap(worker string) ([]domain.UriMap, error) {
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	podLength := len(node.PodList)
-	var excludeMap []model.UriMap
+	var excludeMap []domain.UriMap
 
 	for pods := 0; pods < podLength; pods++ {
 		pod := node.PodList[pods]
@@ -223,7 +223,7 @@ func getPodLbMap(worker string) ([]model.UriMap, error) {
 				key := pod.LbMap[excludeMaps].Key
 				value := pod.LbMap[excludeMaps].Value
 
-				excludeMap = append(excludeMap, model.UriMap{Key: key, Value: value})
+				excludeMap = append(excludeMap, domain.UriMap{Key: key, Value: value})
 			}
 			break
 		}
@@ -232,28 +232,28 @@ func getPodLbMap(worker string) ([]model.UriMap, error) {
 }
 
 // setting.json node의 lbMap 반환
-func getNodeLbMap() ([]model.UriMap, error) {
-	node, err := utils.GetJson()
+func getNodeLbMap() ([]domain.UriMap, error) {
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 
 	modelLength := len(node.LbMap)
-	var loadbalancerMap []model.UriMap
+	var loadbalancerMap []domain.UriMap
 
 	for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
 		key := node.LbMap[loadbalancer].Key
 		value := node.LbMap[loadbalancer].Value
 
-		loadbalancerMap = append(loadbalancerMap, model.UriMap{Key: key, Value: value})
+		loadbalancerMap = append(loadbalancerMap, domain.UriMap{Key: key, Value: value})
 	}
 	return loadbalancerMap, err
 }
 
 // lbMap이 1개일 경우
 func writeFileString(path string, workerMap string) error {
-	file, err := getFile(path)
+	file, err := getUriWorkerMapFile(path)
 	defer file.Close()
 
 	_, err = file.Write([]byte(workerMap))
@@ -265,8 +265,8 @@ func writeFileString(path string, workerMap string) error {
 }
 
 // lbMap이 2개 이상일 경우
-func writeFileArray(path string, workerMaps []model.UriMap, length int) error {
-	file, err := getFile(path)
+func writeFileArray(path string, workerMaps []domain.UriMap, length int) error {
+	file, err := getUriWorkerMapFile(path)
 	defer file.Close()
 
 	for workerMap := 0; workerMap < length; workerMap++ {
@@ -284,7 +284,7 @@ func writeFileArray(path string, workerMaps []model.UriMap, length int) error {
 }
 
 // uriworkermap.properties 반환
-func getFile(path string) (*os.File, error) {
+func getUriWorkerMapFile(path string) (*os.File, error) {
 	file, err := os.Create(path)
 	if err != nil {
 		log.Println(err)
@@ -302,7 +302,7 @@ func isLengthOne(length int) bool {
 
 // setting.json의 uriworkermap.properties 경로 반환
 func getPropertiesPath() (string, error) {
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err
