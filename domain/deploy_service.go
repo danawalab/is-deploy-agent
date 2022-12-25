@@ -1,4 +1,4 @@
-package deploy
+package domain
 
 import (
 	"is-deploy-agent/utils"
@@ -9,10 +9,10 @@ import (
 
 // Deploy
 // setting.json에 지정된 쉘 스크립트 경로를 통해 쉘 스크립트 실행 하여 배포
-func Deploy(worker string, arguments string) (string, error) {
+func Deploy(tomcat string, arguments string) (string, error) {
 	argument := strings.Split(arguments, " ")
 
-	output, err := executeShell(worker, argument...)
+	output, err := executeShell(tomcat, argument...)
 	if err != nil {
 		log.Println(err)
 		return output, err
@@ -22,8 +22,8 @@ func Deploy(worker string, arguments string) (string, error) {
 }
 
 // shell을 실행
-func executeShell(worker string, arguments ...string) (string, error) {
-	shellPath, err := getShellPath(worker)
+func executeShell(tomcat string, arguments ...string) (string, error) {
+	shellPath, err := getShellPath(tomcat)
 	if err != nil {
 		log.Println(err)
 		return "", err
@@ -40,20 +40,20 @@ func executeShell(worker string, arguments ...string) (string, error) {
 }
 
 // shell의 경로를 반환
-func getShellPath(worker string) (string, error) {
+func getShellPath(tomcat string) (string, error) {
 	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err
 	}
-	podLength := len(node.PodList)
+	podLength := len(node.TomcatLists)
 	var shellPath string
 
 	for pods := 0; pods < podLength; pods++ {
-		pod := node.PodList[pods]
+		pod := node.TomcatLists[pods]
 		name := pod.Name
 
-		if utils.IsNameEqual(name, worker) {
+		if utils.IsNameEqual(name, tomcat) {
 			shellPath = pod.ShPath
 			break
 		}

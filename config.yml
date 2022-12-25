@@ -1,0 +1,21 @@
+name: test-ap
+agent:
+  host: localhost
+  port: :5000
+path: /etc/apache2/uri.properties
+lbMap:
+  - key: /*
+    value: lb
+podList:
+  - name: test-to1
+    lbMap:
+      - key: /*
+        value: worker2
+    logPath: /logs/te1.log
+    shPath: /sr/te1.sh
+  - name: test-to2
+    lbMap:
+      - key: /*
+        value: worker1
+    logPath: /logs/te2.log
+    shPath: /sr/te2.sh

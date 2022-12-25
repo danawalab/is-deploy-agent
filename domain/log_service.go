@@ -1,4 +1,4 @@
-package log
+package domain
 
 import (
 	"is-deploy-agent/utils"
@@ -6,19 +6,19 @@ import (
 	"os/exec"
 )
 
-// GetLogTailFlagN
+// GetTomcatLog
 // tail -n을 사용하여 로그를 끝에서 부터 N번째 줄까지 반환
-func GetLogTailFlagN(worker string, line string) (string, error) {
+func GetTomcatLog(worker string, line string) (string, error) {
 	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err
 	}
-	logLength := len(node.PodList)
+	logLength := len(node.TomcatLists)
 
 	var logPath string
 	for pods := 0; pods < logLength; pods++ {
-		pod := node.PodList[pods]
+		pod := node.TomcatLists[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {

@@ -1,4 +1,4 @@
-package update
+package domain
 
 import (
 	"is-deploy-agent/utils"

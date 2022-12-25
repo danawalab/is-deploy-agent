@@ -9,12 +9,12 @@ import (
 
 func ExcludeTestReadJsonValue(t *testing.T) {
 	node := GetJsonToTest()
-	arrayLength := node.PodList[0].LbMap
+	arrayLength := node.TomcatLists[0].LbMap
 	fmt.Println(len(arrayLength))
 
 	for i := 0; i < len(arrayLength); i++ {
-		key := node.PodList[0].LbMap[i].Key
-		value := node.PodList[0].LbMap[i].Value
+		key := node.TomcatLists[0].LbMap[i].Key
+		value := node.TomcatLists[0].LbMap[i].Value
 
 		fmt.Printf("TestReadJsonValue, %s = %s", key, value)
 		fmt.Println()
@@ -23,14 +23,14 @@ func ExcludeTestReadJsonValue(t *testing.T) {
 
 func ExcludeTestJsonValueSave(t *testing.T) {
 	node := GetJsonToTest()
-	arrayLength := node.PodList[0].LbMap
+	arrayLength := node.TomcatLists[0].LbMap
 
 	fmt.Println(len(arrayLength))
 
 	var newArray []ExcludeMap
 	for i := 0; i < len(arrayLength); i++ {
-		key := node.PodList[0].LbMap[i].Key
-		value := node.PodList[0].LbMap[i].Value
+		key := node.TomcatLists[0].LbMap[i].Key
+		value := node.TomcatLists[0].LbMap[i].Value
 
 		newArray = append(newArray, ExcludeMap{key, value})
 	}
@@ -42,11 +42,11 @@ func ExcludeTestFindByName(t *testing.T) {
 	worker := "WAS1"
 	node := GetJsonToTest()
 
-	length := len(node.PodList)
+	length := len(node.TomcatLists)
 	var newArray []ExcludeMap
 
 	for i := 0; i < length; i++ {
-		pod := node.PodList[i]
+		pod := node.TomcatLists[i]
 		name := pod.Name
 
 		if worker == name {
@@ -81,14 +81,14 @@ func TestReadProperties(t *testing.T) {
 
 	node := GetJsonToTest()
 
-	length := len(node.PodList)
+	length := len(node.TomcatLists)
 	newArray := make([]string, 0)
 	nameArray := make([]string, 0)
 	podName := ""
 
 	for i := 0; i < length; i++ {
 		println("Pod Search")
-		pod := node.PodList[i]
+		pod := node.TomcatLists[i]
 		exLength := len(pod.LbMap)
 
 		for j := 0; j < exLength; j++ {

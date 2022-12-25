@@ -1,11 +1,11 @@
-package healthCheck
+package domain
 
 import (
 	"log"
 	"os/exec"
 )
 
-func TomcatHealthCheck(tomcat string) (string, error) {
+func HealthCheck(tomcat string) (string, error) {
 
 	cmd := exec.Command("bash", "-c", "ps -ef | grep "+tomcat)
 

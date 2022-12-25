@@ -41,7 +41,7 @@ func ExcludeTestDownloadWAR(t *testing.T) {
 func ExcludeTestDeploy(t *testing.T) {
 	models := getJson()
 
-	webappPath := models[0].NodeList[0].PodList[0].WebappPath
+	webappPath := models[0].NodeList[0].TomcatLists[0].WebappPath
 	err := os.Remove(webappPath + "web.war")
 	if err != nil {
 		log.Fatal(err)

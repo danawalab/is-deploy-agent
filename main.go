@@ -11,13 +11,13 @@ func main() {
 	server := router.SetRouter()
 
 	if len(port) == 1 {
-		fmt.Println("port를 지정해 주세요")
+		fmt.Println("Please specify port")
 	} else if len(port) == 2 {
 		err := server.Run(":" + port[1])
 		if err != nil {
-			fmt.Println("port 에러 ", err)
+			fmt.Println("port error ", err)
 		}
 	} else {
-		fmt.Println("port가 여러개 입니다")
+		fmt.Println("There are multiple ports, Please write only one port.")
 	}
 }

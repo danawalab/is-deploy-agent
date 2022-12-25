@@ -12,7 +12,7 @@ import (
 func ExcludeTestLogFileRead(t *testing.T) {
 	node := GetJsonToTest()
 
-	logPath := node.PodList[0].LogPath
+	logPath := node.TomcatLists[0].LogPath
 
 	logs, err := os.Open(logPath)
 	if err != nil {

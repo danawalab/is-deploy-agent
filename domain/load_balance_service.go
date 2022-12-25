@@ -1,8 +1,7 @@
-package loadBalance
+package domain
 
 import (
 	"bufio"
-	"is-deploy-agent/domain"
 	"is-deploy-agent/utils"
 	"log"
 	"os"
@@ -38,7 +37,7 @@ func CheckLbStatus() (string, error) {
 		log.Println(err)
 		return "", err
 	}
-	podLength := len(node.PodList)
+	podLength := len(node.TomcatLists)
 
 	podMap := make([]string, 0)
 	// setting.json에 pod의 lbMap이 2개 이상일 경우 해당 슬라이스를 통해 다른 결괏값이 나오는 걸 방지
@@ -47,11 +46,11 @@ func CheckLbStatus() (string, error) {
 
 	// pod 길이 만큼 uriworekr.properties의 값과 pod의 lbMap 값을 비교한다
 	for pod := 0; pod < podLength; pod++ {
-		podLbLength := len(node.PodList[pod].LbMap)
+		podLbLength := len(node.TomcatLists[pod].LbMap)
 
 		for lb := 0; lb < podLbLength; lb++ {
-			key := node.PodList[pod].LbMap[lb].Key
-			value := node.PodList[pod].LbMap[lb].Value
+			key := node.TomcatLists[pod].LbMap[lb].Key
+			value := node.TomcatLists[pod].LbMap[lb].Value
 
 			podMap = append(podMap, key+"="+value)
 		}
@@ -61,7 +60,7 @@ func CheckLbStatus() (string, error) {
 		if uriWorkerMapLength == newArrayLength {
 			for mapLength := 0; mapLength < uriWorkerMapLength; mapLength++ {
 				if uriWorkerMap[mapLength] == podMap[mapLength] {
-					podName = node.PodList[pod].Name
+					podName = node.TomcatLists[pod].Name
 					// checkPodMap에 PodName을 넣어준다
 					checkPodMap = append(checkPodMap, podName)
 					return podName, err
@@ -194,7 +193,7 @@ func Exclude(worker string) error {
 }
 
 // lbMap이 1개면 바로 key=value로 반환
-func getLbMapResult(lbMap []domain.UriMap) string {
+func getLbMapResult(lbMap []utils.UriMap) string {
 	key := lbMap[0].Key
 	value := lbMap[0].Value
 	result := key + "=" + value
@@ -203,17 +202,17 @@ func getLbMapResult(lbMap []domain.UriMap) string {
 }
 
 // setting.json podList의 lbMap 반환
-func getPodLbMap(worker string) ([]domain.UriMap, error) {
+func getPodLbMap(worker string) ([]utils.UriMap, error) {
 	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	podLength := len(node.PodList)
-	var excludeMap []domain.UriMap
+	podLength := len(node.TomcatLists)
+	var excludeMap []utils.UriMap
 
 	for pods := 0; pods < podLength; pods++ {
-		pod := node.PodList[pods]
+		pod := node.TomcatLists[pods]
 		name := pod.Name
 
 		if utils.IsNameEqual(name, worker) {
@@ -223,7 +222,7 @@ func getPodLbMap(worker string) ([]domain.UriMap, error) {
 				key := pod.LbMap[excludeMaps].Key
 				value := pod.LbMap[excludeMaps].Value
 
-				excludeMap = append(excludeMap, domain.UriMap{Key: key, Value: value})
+				excludeMap = append(excludeMap, utils.UriMap{Key: key, Value: value})
 			}
 			break
 		}
@@ -232,7 +231,7 @@ func getPodLbMap(worker string) ([]domain.UriMap, error) {
 }
 
 // setting.json node의 lbMap 반환
-func getNodeLbMap() ([]domain.UriMap, error) {
+func getNodeLbMap() ([]utils.UriMap, error) {
 	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
@@ -240,13 +239,13 @@ func getNodeLbMap() ([]domain.UriMap, error) {
 	}
 
 	modelLength := len(node.LbMap)
-	var loadbalancerMap []domain.UriMap
+	var loadbalancerMap []utils.UriMap
 
 	for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
 		key := node.LbMap[loadbalancer].Key
 		value := node.LbMap[loadbalancer].Value
 
-		loadbalancerMap = append(loadbalancerMap, domain.UriMap{Key: key, Value: value})
+		loadbalancerMap = append(loadbalancerMap, utils.UriMap{Key: key, Value: value})
 	}
 	return loadbalancerMap, err
 }
@@ -265,7 +264,7 @@ func writeFileString(path string, workerMap string) error {
 }
 
 // lbMap이 2개 이상일 경우
-func writeFileArray(path string, workerMaps []domain.UriMap, length int) error {
+func writeFileArray(path string, workerMaps []utils.UriMap, length int) error {
 	file, err := getUriWorkerMapFile(path)
 	defer file.Close()
 
