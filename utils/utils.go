@@ -7,9 +7,9 @@ import (
 	"os"
 )
 
-// GetJson
+// GetSettingJson
 // setting.json을 읽어서 반환
-func GetJson() (model.Node, error) {
+func GetSettingJson() (model.Node, error) {
 	path, err := os.Open("./setting.json")
 	if err != nil {
 		log.Println(err)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"is-deploy-agent/router"
 	"os"
 )
@@ -9,6 +10,8 @@ import (
 func main() {
 	port := os.Args
 	server := router.SetRouter()
+
+	gin.SetMode(gin.ReleaseMode)
 
 	if len(port) == 1 {
 		fmt.Println("port를 지정해 주세요")

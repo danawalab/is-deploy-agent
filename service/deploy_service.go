@@ -1,4 +1,4 @@
-package deploy
+package service
 
 import (
 	"is-deploy-agent/utils"
@@ -8,40 +8,40 @@ import (
 )
 
 // Deploy
-// setting.json에 지정된 shell 경로를 통해 shell 실행 하여 배포
-func Deploy(worker string, arguments string) error {
+// setting.json에 지정된 쉘 스크립트 경로를 통해 쉘 스크립트 실행 하여 배포
+func Deploy(worker string, arguments string) (string, error) {
 	argument := strings.Split(arguments, " ")
 
-	err := executeShell(worker, argument...)
+	output, err := executeShell(worker, argument...)
 	if err != nil {
 		log.Println(err)
-		return err
+		return output, err
 	}
 
-	return err
+	return output, err
 }
 
 // shell을 실행
-func executeShell(worker string, arguments ...string) error {
+func executeShell(worker string, arguments ...string) (string, error) {
 	shellPath, err := getShellPath(worker)
 	if err != nil {
 		log.Println(err)
-		return err
+		return "", err
 	}
 	cmd := exec.Command(shellPath, arguments...)
 	output, err := cmd.Output()
 	if err != nil {
 		log.Println(err)
-		return err
+		return "", err
 	}
 
-	log.Println("Execute Shell Script : ", string(output))
-	return err
+	log.Println("Execute ShellScript Script : ", string(output))
+	return string(output), err
 }
 
 // shell의 경로를 반환
 func getShellPath(worker string) (string, error) {
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err

@@ -1,4 +1,4 @@
-package loadbalance
+package service
 
 import (
 	"bufio"
@@ -33,7 +33,7 @@ func CheckLbStatus() (string, error) {
 	}
 	uriWorkerMapLength := len(uriWorkerMap)
 
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err
@@ -204,7 +204,7 @@ func getLbMapResult(lbMap []model.UriMap) string {
 
 // setting.json podList의 lbMap 반환
 func getPodLbMap(worker string) ([]model.UriMap, error) {
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -233,7 +233,7 @@ func getPodLbMap(worker string) ([]model.UriMap, error) {
 
 // setting.json node의 lbMap 반환
 func getNodeLbMap() ([]model.UriMap, error) {
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -253,7 +253,7 @@ func getNodeLbMap() ([]model.UriMap, error) {
 
 // lbMap이 1개일 경우
 func writeFileString(path string, workerMap string) error {
-	file, err := getFile(path)
+	file, err := getUriWorkerMapFile(path)
 	defer file.Close()
 
 	_, err = file.Write([]byte(workerMap))
@@ -266,7 +266,7 @@ func writeFileString(path string, workerMap string) error {
 
 // lbMap이 2개 이상일 경우
 func writeFileArray(path string, workerMaps []model.UriMap, length int) error {
-	file, err := getFile(path)
+	file, err := getUriWorkerMapFile(path)
 	defer file.Close()
 
 	for workerMap := 0; workerMap < length; workerMap++ {
@@ -284,7 +284,7 @@ func writeFileArray(path string, workerMaps []model.UriMap, length int) error {
 }
 
 // uriworkermap.properties 반환
-func getFile(path string) (*os.File, error) {
+func getUriWorkerMapFile(path string) (*os.File, error) {
 	file, err := os.Create(path)
 	if err != nil {
 		log.Println(err)
@@ -302,7 +302,7 @@ func isLengthOne(length int) bool {
 
 // setting.json의 uriworkermap.properties 경로 반환
 func getPropertiesPath() (string, error) {
-	node, err := utils.GetJson()
+	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return "", err
