@@ -1,4 +1,4 @@
-package deploy
+package service
 
 import (
 	"is-deploy-agent/utils"

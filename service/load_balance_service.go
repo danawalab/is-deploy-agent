@@ -1,8 +1,8 @@
-package loadBalance
+package service
 
 import (
 	"bufio"
-	"is-deploy-agent/domain"
+	"is-deploy-agent/model"
 	"is-deploy-agent/utils"
 	"log"
 	"os"
@@ -194,7 +194,7 @@ func Exclude(worker string) error {
 }
 
 // lbMap이 1개면 바로 key=value로 반환
-func getLbMapResult(lbMap []domain.UriMap) string {
+func getLbMapResult(lbMap []model.UriMap) string {
 	key := lbMap[0].Key
 	value := lbMap[0].Value
 	result := key + "=" + value
@@ -203,14 +203,14 @@ func getLbMapResult(lbMap []domain.UriMap) string {
 }
 
 // setting.json podList의 lbMap 반환
-func getPodLbMap(worker string) ([]domain.UriMap, error) {
+func getPodLbMap(worker string) ([]model.UriMap, error) {
 	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
 		return nil, err
 	}
 	podLength := len(node.PodList)
-	var excludeMap []domain.UriMap
+	var excludeMap []model.UriMap
 
 	for pods := 0; pods < podLength; pods++ {
 		pod := node.PodList[pods]
@@ -223,7 +223,7 @@ func getPodLbMap(worker string) ([]domain.UriMap, error) {
 				key := pod.LbMap[excludeMaps].Key
 				value := pod.LbMap[excludeMaps].Value
 
-				excludeMap = append(excludeMap, domain.UriMap{Key: key, Value: value})
+				excludeMap = append(excludeMap, model.UriMap{Key: key, Value: value})
 			}
 			break
 		}
@@ -232,7 +232,7 @@ func getPodLbMap(worker string) ([]domain.UriMap, error) {
 }
 
 // setting.json node의 lbMap 반환
-func getNodeLbMap() ([]domain.UriMap, error) {
+func getNodeLbMap() ([]model.UriMap, error) {
 	node, err := utils.GetSettingJson()
 	if err != nil {
 		log.Println(err)
@@ -240,13 +240,13 @@ func getNodeLbMap() ([]domain.UriMap, error) {
 	}
 
 	modelLength := len(node.LbMap)
-	var loadbalancerMap []domain.UriMap
+	var loadbalancerMap []model.UriMap
 
 	for loadbalancer := 0; loadbalancer < modelLength; loadbalancer++ {
 		key := node.LbMap[loadbalancer].Key
 		value := node.LbMap[loadbalancer].Value
 
-		loadbalancerMap = append(loadbalancerMap, domain.UriMap{Key: key, Value: value})
+		loadbalancerMap = append(loadbalancerMap, model.UriMap{Key: key, Value: value})
 	}
 	return loadbalancerMap, err
 }
@@ -265,7 +265,7 @@ func writeFileString(path string, workerMap string) error {
 }
 
 // lbMap이 2개 이상일 경우
-func writeFileArray(path string, workerMaps []domain.UriMap, length int) error {
+func writeFileArray(path string, workerMaps []model.UriMap, length int) error {
 	file, err := getUriWorkerMapFile(path)
 	defer file.Close()
 

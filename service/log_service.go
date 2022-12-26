@@ -1,4 +1,4 @@
-package log
+package service
 
 import (
 	"is-deploy-agent/utils"

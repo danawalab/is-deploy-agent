@@ -2,26 +2,26 @@ package utils
 
 import (
 	"encoding/json"
-	"is-deploy-agent/domain"
+	"is-deploy-agent/model"
 	"log"
 	"os"
 )
 
 // GetSettingJson
 // setting.json을 읽어서 반환
-func GetSettingJson() (domain.Node, error) {
+func GetSettingJson() (model.Node, error) {
 	path, err := os.Open("./setting.json")
 	if err != nil {
 		log.Println(err)
-		return domain.Node{}, err
+		return model.Node{}, err
 	}
 	defer path.Close()
 
-	var models domain.Node
+	var models model.Node
 	err = json.NewDecoder(path).Decode(&models)
 	if err != nil {
 		log.Println(err)
-		return domain.Node{}, err
+		return model.Node{}, err
 	}
 
 	return models, err
