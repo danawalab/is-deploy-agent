@@ -1,14 +1,5 @@
 # is deploy agent
 
-Apache Tomcat 무중단배포 Agent   
-
-[is-deploy-console](https://github.com/danawalab/is-deploy-console)
-
-사용법은 곧 기술블로그에 포스팅 예정입니다.
-
-
-# is deploy agent
-
 ### Apache Tomcat 로드밸런싱 무중단 배포 툴
 Apache에서 종료 없이 Apache Tomcat 로드밸런싱 상태에서 Tomcat만 제외해서 무중단으로 배포할 수 있습니다.
 
