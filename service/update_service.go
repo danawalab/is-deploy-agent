@@ -20,8 +20,12 @@ func AgentUpdate(version string) error {
 	}
 	port := node.Agent.Port
 
-	cmd := exec.Command("./agent.sh", port[1:], version)
-	_, err = cmd.Output()
+	err = exec.Command("./agent.sh", port[1:], version).Run()
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	//_, err = cmd.Output()
 
 	if err != nil {
 		log.Println(err)
